@@ -14,7 +14,9 @@ namespace Model
         private readonly List<Minion> _minions = new List<Minion>();
         private int _id = 1;
         public const int MinHeight = 90;
-        public const int MaxHeight = 200;
+        public const int MiddleHeight = 110;
+        public const int HighHeight = 125;
+        public const int MaxHeight = 140;
 
         /// <summary>
         /// Добавляет нового миньона
@@ -65,24 +67,27 @@ namespace Model
         /// <param name="height">рост миньона</param>
         /// <param name="hastwoeyes">есть ли 2 глаза у миньона</param>
         /// <exception cref="ArgumentException">исключение: неправильный ввод</exception>
-        public void UpdateMinion(int id, string name, int height, bool hastwoeyes)
+        public void UpdateMinion(int id, string? name, int? height, bool? hastwoeyes)
         {
-            if (string.IsNullOrWhiteSpace(name))
+            var minion = _minions.FirstOrDefault(x => x.ID == id);
+            if (minion == null)
+                throw new ArgumentException($"Миньон с id {id} не найден");
+
+            if (name != null)
             {
-                throw new ArgumentException("Имя не может быть пустым");
+                if (string.IsNullOrWhiteSpace(name))
+                {
+                    throw new ArgumentException("Имя не может быть пустым");
+                }
+
             }
             if (height < MinHeight || height > MaxHeight)
             {
                 throw new ArgumentException($"Рост должен быть в диапазоне от {MinHeight} до {MaxHeight}");
             }
-
-            var minion = _minions.FirstOrDefault(x => x.ID == id);
-            if (minion == null)
-                throw new ArgumentException($"Миньон с id {id} не найден");
-            minion.ID = id;
-            minion.Name = name;
-            minion.Height = height;
-            minion.HasTwoEyes = hastwoeyes;
+            if (name != null) minion.Name = name;
+            if (height.HasValue) minion.Height = height.Value;
+            if (hastwoeyes.HasValue) minion.HasTwoEyes = hastwoeyes.Value;
         }
 
         /// <summary>
@@ -102,9 +107,9 @@ namespace Model
         {
             return new Dictionary<string, List<Minion>>
             {
-                ["Низкий"] = _minions.Where(x => x.Height < 120).ToList(),
-                ["Средний"] = _minions.Where(x => x.Height >= 120 && x.Height < 170).ToList(),
-                ["Высокий"] = _minions.Where(x => x.Height >= 170).ToList()
+                ["Низкий"] = _minions.Where(x => x.Height < MiddleHeight).ToList(),
+                ["Средний"] = _minions.Where(x => x.Height >= MiddleHeight && x.Height < HighHeight).ToList(),
+                ["Высокий"] = _minions.Where(x => x.Height >= HighHeight).ToList()
             };
         }
 
@@ -117,21 +122,5 @@ namespace Model
         {
             return _minions.Where(x => x.Name.Contains(name, StringComparison.OrdinalIgnoreCase)).ToList();
         }
-
-
-        public void CreateStarterMinions()
-        {
-            AddMinion("Кевин", 137, true);
-            AddMinion("Боб", 90,true);
-            AddMinion("Стюарт",118,false);
-            AddMinion("Отто",100, true);
-            AddMinion("Дейв", 115, true);
-            AddMinion("Джеймс", 95, true);
-            AddMinion("Генри",90, true);
-            AddMinion("Эд",130, true);
-
-        }
-
-
     }
 }

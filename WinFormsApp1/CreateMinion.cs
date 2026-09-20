@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Model;
 
-namespace WindowsFormsApp
+namespace WinFormsApp
 {
     public partial class CreateMinion : Form
     {
@@ -37,10 +37,10 @@ namespace WindowsFormsApp
             using (var g = Graphics.FromImage(bmp))
             {
                 int number = (int)numericUpDownHeight.Value;
-                Image body = number < 120 ? Properties.Resources.Short
-                             : number < 170 ? Properties.Resources.Medium
-                             : Properties.Resources.High;
-                Image eyes = radioButtonOneEyes.Checked ? Properties.Resources.OneEye : Properties.Resources.TwoEyes;
+                Image body = number < 120 ? WinFormsApp1.Properties.Resources.Short
+                             : number < 170 ? WinFormsApp1.Properties.Resources.Medium
+                             : WinFormsApp1.Properties.Resources.High;
+                Image eyes = radioButtonOneEyes.Checked ? WinFormsApp1.Properties.Resources.OneEye : WinFormsApp1.Properties.Resources.TwoEyes;
                 g.DrawImage(body, 0, 0, bmp.Width, bmp.Height);
                 g.DrawImage(eyes, 0, 0, bmp.Width, bmp.Height);
             }

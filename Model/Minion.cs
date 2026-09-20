@@ -15,7 +15,6 @@ namespace Model
         public string Name { get; set; }
         public int Height { get; set; }
         public bool HasTwoEyes { get; set; }   
-
         public Minion(int id, string name, int height, bool hastwoeyes)
         {
             ID = id;

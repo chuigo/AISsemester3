@@ -1,4 +1,4 @@
-﻿namespace WindowsFormsApp
+﻿namespace WinFormsApp
 {
     partial class UpdateMinion
     {
@@ -28,173 +28,172 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.UpdateButton = new System.Windows.Forms.Button();
-            this.textBoxName = new System.Windows.Forms.TextBox();
-            this.label4 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
-            this.numericUpDownHeight = new System.Windows.Forms.NumericUpDown();
-            this.label1 = new System.Windows.Forms.Label();
-            this.radioButtonOneEye = new System.Windows.Forms.RadioButton();
-            this.radioButtonTwoEyes = new System.Windows.Forms.RadioButton();
-            this.panel1 = new System.Windows.Forms.Panel();
-            this.pictureBoxBody = new System.Windows.Forms.PictureBox();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownHeight)).BeginInit();
-            this.panel1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxBody)).BeginInit();
-            this.SuspendLayout();
+            UpdateButton = new Button();
+            textBoxName = new TextBox();
+            label4 = new Label();
+            label3 = new Label();
+            label2 = new Label();
+            numericUpDownHeight = new NumericUpDown();
+            label1 = new Label();
+            radioButtonOneEye = new RadioButton();
+            radioButtonTwoEyes = new RadioButton();
+            panel1 = new Panel();
+            pictureBoxBody = new PictureBox();
+            ((System.ComponentModel.ISupportInitialize)numericUpDownHeight).BeginInit();
+            panel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)pictureBoxBody).BeginInit();
+            SuspendLayout();
             // 
             // UpdateButton
             // 
-            this.UpdateButton.Cursor = System.Windows.Forms.Cursors.Default;
-            this.UpdateButton.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            this.UpdateButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.UpdateButton.Location = new System.Drawing.Point(124, 549);
-            this.UpdateButton.Name = "UpdateButton";
-            this.UpdateButton.Size = new System.Drawing.Size(131, 45);
-            this.UpdateButton.TabIndex = 20;
-            this.UpdateButton.Text = "Изменить";
-            this.UpdateButton.UseVisualStyleBackColor = true;
-            this.UpdateButton.Click += new System.EventHandler(this.UpdateButton_Click);
+            UpdateButton.FlatStyle = FlatStyle.System;
+            UpdateButton.Font = new Font("Microsoft Sans Serif", 15.75F, FontStyle.Regular, GraphicsUnit.Point, 204);
+            UpdateButton.Location = new Point(145, 633);
+            UpdateButton.Margin = new Padding(4, 3, 4, 3);
+            UpdateButton.Name = "UpdateButton";
+            UpdateButton.Size = new Size(153, 52);
+            UpdateButton.TabIndex = 20;
+            UpdateButton.Text = "Изменить";
+            UpdateButton.UseVisualStyleBackColor = true;
+            UpdateButton.Click += UpdateButton_Click;
             // 
             // textBoxName
             // 
-            this.textBoxName.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.textBoxName.Location = new System.Drawing.Point(135, 186);
-            this.textBoxName.Name = "textBoxName";
-            this.textBoxName.Size = new System.Drawing.Size(214, 31);
-            this.textBoxName.TabIndex = 19;
+            textBoxName.Font = new Font("Microsoft Sans Serif", 15.75F, FontStyle.Regular, GraphicsUnit.Point, 204);
+            textBoxName.Location = new Point(158, 215);
+            textBoxName.Margin = new Padding(4, 3, 4, 3);
+            textBoxName.Name = "textBoxName";
+            textBoxName.Size = new Size(249, 31);
+            textBoxName.TabIndex = 19;
             // 
             // label4
             // 
-            this.label4.AutoSize = true;
-            this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label4.Location = new System.Drawing.Point(38, 279);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(184, 25);
-            this.label4.TabIndex = 17;
-            this.label4.Text = "Количество глаз:";
+            label4.AutoSize = true;
+            label4.Font = new Font("Microsoft Sans Serif", 15.75F, FontStyle.Regular, GraphicsUnit.Point, 204);
+            label4.Location = new Point(44, 322);
+            label4.Margin = new Padding(4, 0, 4, 0);
+            label4.Name = "label4";
+            label4.Size = new Size(184, 25);
+            label4.TabIndex = 17;
+            label4.Text = "Количество глаз:";
             // 
             // label3
             // 
-            this.label3.AutoSize = true;
-            this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label3.Location = new System.Drawing.Point(38, 192);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(59, 25);
-            this.label3.TabIndex = 16;
-            this.label3.Text = "Имя:";
+            label3.AutoSize = true;
+            label3.Font = new Font("Microsoft Sans Serif", 15.75F, FontStyle.Regular, GraphicsUnit.Point, 204);
+            label3.Location = new Point(44, 222);
+            label3.Margin = new Padding(4, 0, 4, 0);
+            label3.Name = "label3";
+            label3.Size = new Size(59, 25);
+            label3.TabIndex = 16;
+            label3.Text = "Имя:";
             // 
             // label2
             // 
-            this.label2.AutoSize = true;
-            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label2.Location = new System.Drawing.Point(38, 234);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(65, 25);
-            this.label2.TabIndex = 15;
-            this.label2.Text = "Рост:";
+            label2.AutoSize = true;
+            label2.Font = new Font("Microsoft Sans Serif", 15.75F, FontStyle.Regular, GraphicsUnit.Point, 204);
+            label2.Location = new Point(44, 270);
+            label2.Margin = new Padding(4, 0, 4, 0);
+            label2.Name = "label2";
+            label2.Size = new Size(65, 25);
+            label2.TabIndex = 15;
+            label2.Text = "Рост:";
             // 
             // numericUpDownHeight
             // 
-            this.numericUpDownHeight.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.numericUpDownHeight.Location = new System.Drawing.Point(135, 233);
-            this.numericUpDownHeight.Maximum = new decimal(new int[] {
-            200,
-            0,
-            0,
-            0});
-            this.numericUpDownHeight.Minimum = new decimal(new int[] {
-            90,
-            0,
-            0,
-            0});
-            this.numericUpDownHeight.Name = "numericUpDownHeight";
-            this.numericUpDownHeight.Size = new System.Drawing.Size(214, 29);
-            this.numericUpDownHeight.TabIndex = 14;
-            this.numericUpDownHeight.Value = new decimal(new int[] {
-            150,
-            0,
-            0,
-            0});
+            numericUpDownHeight.Font = new Font("Microsoft Sans Serif", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 204);
+            numericUpDownHeight.Location = new Point(158, 269);
+            numericUpDownHeight.Margin = new Padding(4, 3, 4, 3);
+            numericUpDownHeight.Maximum = new decimal(new int[] { 200, 0, 0, 0 });
+            numericUpDownHeight.Minimum = new decimal(new int[] { 90, 0, 0, 0 });
+            numericUpDownHeight.Name = "numericUpDownHeight";
+            numericUpDownHeight.Size = new Size(250, 29);
+            numericUpDownHeight.TabIndex = 14;
+            numericUpDownHeight.Value = new decimal(new int[] { 120, 0, 0, 0 });
             // 
             // label1
             // 
-            this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 26.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label1.Location = new System.Drawing.Point(26, 58);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(325, 39);
-            this.label1.TabIndex = 13;
-            this.label1.Text = "Изменить миньона";
+            label1.AutoSize = true;
+            label1.Font = new Font("Microsoft Sans Serif", 26.25F, FontStyle.Regular, GraphicsUnit.Point, 204);
+            label1.Location = new Point(30, 67);
+            label1.Margin = new Padding(4, 0, 4, 0);
+            label1.Name = "label1";
+            label1.Size = new Size(325, 39);
+            label1.TabIndex = 13;
+            label1.Text = "Изменить миньона";
             // 
-            // radioButtonOneEyes
+            // radioButtonOneEye
             // 
-            this.radioButtonOneEye.AutoSize = true;
-            this.radioButtonOneEye.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.radioButtonOneEye.Location = new System.Drawing.Point(19, 15);
-            this.radioButtonOneEye.Name = "radioButtonOneEyes";
-            this.radioButtonOneEye.Size = new System.Drawing.Size(82, 29);
-            this.radioButtonOneEye.TabIndex = 7;
-            this.radioButtonOneEye.TabStop = true;
-            this.radioButtonOneEye.Text = "Один";
-            this.radioButtonOneEye.UseVisualStyleBackColor = true;
+            radioButtonOneEye.AutoSize = true;
+            radioButtonOneEye.Font = new Font("Microsoft Sans Serif", 15.75F, FontStyle.Regular, GraphicsUnit.Point, 204);
+            radioButtonOneEye.Location = new Point(22, 17);
+            radioButtonOneEye.Margin = new Padding(4, 3, 4, 3);
+            radioButtonOneEye.Name = "radioButtonOneEye";
+            radioButtonOneEye.Size = new Size(82, 29);
+            radioButtonOneEye.TabIndex = 7;
+            radioButtonOneEye.TabStop = true;
+            radioButtonOneEye.Text = "Один";
+            radioButtonOneEye.UseVisualStyleBackColor = true;
             // 
-            // radionButtonTwoEyes
+            // radioButtonTwoEyes
             // 
-            this.radioButtonTwoEyes.AutoSize = true;
-            this.radioButtonTwoEyes.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.radioButtonTwoEyes.Location = new System.Drawing.Point(107, 15);
-            this.radioButtonTwoEyes.Name = "radionButtonTwoEyes";
-            this.radioButtonTwoEyes.Size = new System.Drawing.Size(69, 29);
-            this.radioButtonTwoEyes.TabIndex = 6;
-            this.radioButtonTwoEyes.TabStop = true;
-            this.radioButtonTwoEyes.Text = "Два";
-            this.radioButtonTwoEyes.UseVisualStyleBackColor = true;
+            radioButtonTwoEyes.AutoSize = true;
+            radioButtonTwoEyes.Font = new Font("Microsoft Sans Serif", 15.75F, FontStyle.Regular, GraphicsUnit.Point, 204);
+            radioButtonTwoEyes.Location = new Point(125, 17);
+            radioButtonTwoEyes.Margin = new Padding(4, 3, 4, 3);
+            radioButtonTwoEyes.Name = "radioButtonTwoEyes";
+            radioButtonTwoEyes.Size = new Size(69, 29);
+            radioButtonTwoEyes.TabIndex = 6;
+            radioButtonTwoEyes.TabStop = true;
+            radioButtonTwoEyes.Text = "Два";
+            radioButtonTwoEyes.UseVisualStyleBackColor = true;
             // 
             // panel1
             // 
-            this.panel1.Controls.Add(this.radioButtonOneEye);
-            this.panel1.Controls.Add(this.radioButtonTwoEyes);
-            this.panel1.Location = new System.Drawing.Point(165, 307);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(184, 57);
-            this.panel1.TabIndex = 18;
+            panel1.Controls.Add(radioButtonOneEye);
+            panel1.Controls.Add(radioButtonTwoEyes);
+            panel1.Location = new Point(192, 354);
+            panel1.Margin = new Padding(4, 3, 4, 3);
+            panel1.Name = "panel1";
+            panel1.Size = new Size(215, 66);
+            panel1.TabIndex = 18;
             // 
             // pictureBoxBody
             // 
-            this.pictureBoxBody.BackColor = System.Drawing.Color.Transparent;
-            this.pictureBoxBody.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.pictureBoxBody.Location = new System.Drawing.Point(374, 58);
-            this.pictureBoxBody.Name = "pictureBoxBody";
-            this.pictureBoxBody.Size = new System.Drawing.Size(381, 472);
-            this.pictureBoxBody.TabIndex = 12;
-            this.pictureBoxBody.TabStop = false;
+            pictureBoxBody.BackColor = Color.Transparent;
+            pictureBoxBody.BackgroundImageLayout = ImageLayout.Center;
+            pictureBoxBody.Location = new Point(436, 67);
+            pictureBoxBody.Margin = new Padding(4, 3, 4, 3);
+            pictureBoxBody.Name = "pictureBoxBody";
+            pictureBoxBody.Size = new Size(444, 545);
+            pictureBoxBody.TabIndex = 12;
+            pictureBoxBody.TabStop = false;
             // 
             // UpdateMinion
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(780, 652);
-            this.Controls.Add(this.UpdateButton);
-            this.Controls.Add(this.textBoxName);
-            this.Controls.Add(this.label4);
-            this.Controls.Add(this.label3);
-            this.Controls.Add(this.label2);
-            this.Controls.Add(this.numericUpDownHeight);
-            this.Controls.Add(this.label1);
-            this.Controls.Add(this.panel1);
-            this.Controls.Add(this.pictureBoxBody);
-            this.MaximumSize = new System.Drawing.Size(796, 691);
-            this.MinimumSize = new System.Drawing.Size(796, 691);
-            this.Name = "UpdateMinion";
-            this.Text = "UpdateMinion";
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownHeight)).EndInit();
-            this.panel1.ResumeLayout(false);
-            this.panel1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxBody)).EndInit();
-            this.ResumeLayout(false);
-            this.PerformLayout();
+            AutoScaleDimensions = new SizeF(7F, 15F);
+            AutoScaleMode = AutoScaleMode.Font;
+            ClientSize = new Size(910, 752);
+            Controls.Add(UpdateButton);
+            Controls.Add(textBoxName);
+            Controls.Add(label4);
+            Controls.Add(label3);
+            Controls.Add(label2);
+            Controls.Add(numericUpDownHeight);
+            Controls.Add(label1);
+            Controls.Add(panel1);
+            Controls.Add(pictureBoxBody);
+            Margin = new Padding(4, 3, 4, 3);
+            MaximumSize = new Size(926, 791);
+            MinimumSize = new Size(926, 791);
+            Name = "UpdateMinion";
+            Text = "UpdateMinion";
+            ((System.ComponentModel.ISupportInitialize)numericUpDownHeight).EndInit();
+            panel1.ResumeLayout(false);
+            panel1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)pictureBoxBody).EndInit();
+            ResumeLayout(false);
+            PerformLayout();
 
         }
 
