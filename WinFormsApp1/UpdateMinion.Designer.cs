@@ -30,11 +30,11 @@
         {
             UpdateButton = new Button();
             textBoxName = new TextBox();
-            label4 = new Label();
-            label3 = new Label();
-            label2 = new Label();
+            labelCountEyes = new Label();
+            labelName = new Label();
+            labelHeight = new Label();
             numericUpDownHeight = new NumericUpDown();
-            label1 = new Label();
+            labelChangeMinion = new Label();
             radioButtonOneEye = new RadioButton();
             radioButtonTwoEyes = new RadioButton();
             panel1 = new Panel();
@@ -66,38 +66,38 @@
             textBoxName.Size = new Size(249, 31);
             textBoxName.TabIndex = 19;
             // 
-            // label4
+            // labelSearch
             // 
-            label4.AutoSize = true;
-            label4.Font = new Font("Microsoft Sans Serif", 15.75F, FontStyle.Regular, GraphicsUnit.Point, 204);
-            label4.Location = new Point(44, 322);
-            label4.Margin = new Padding(4, 0, 4, 0);
-            label4.Name = "label4";
-            label4.Size = new Size(184, 25);
-            label4.TabIndex = 17;
-            label4.Text = "Количество глаз:";
+            labelCountEyes.AutoSize = true;
+            labelCountEyes.Font = new Font("Microsoft Sans Serif", 15.75F, FontStyle.Regular, GraphicsUnit.Point, 204);
+            labelCountEyes.Location = new Point(44, 322);
+            labelCountEyes.Margin = new Padding(4, 0, 4, 0);
+            labelCountEyes.Name = "labelSearch";
+            labelCountEyes.Size = new Size(184, 25);
+            labelCountEyes.TabIndex = 17;
+            labelCountEyes.Text = "Количество глаз:";
             // 
-            // label3
+            // labelGroup
             // 
-            label3.AutoSize = true;
-            label3.Font = new Font("Microsoft Sans Serif", 15.75F, FontStyle.Regular, GraphicsUnit.Point, 204);
-            label3.Location = new Point(44, 222);
-            label3.Margin = new Padding(4, 0, 4, 0);
-            label3.Name = "label3";
-            label3.Size = new Size(59, 25);
-            label3.TabIndex = 16;
-            label3.Text = "Имя:";
+            labelName.AutoSize = true;
+            labelName.Font = new Font("Microsoft Sans Serif", 15.75F, FontStyle.Regular, GraphicsUnit.Point, 204);
+            labelName.Location = new Point(44, 222);
+            labelName.Margin = new Padding(4, 0, 4, 0);
+            labelName.Name = "labelGroup";
+            labelName.Size = new Size(59, 25);
+            labelName.TabIndex = 16;
+            labelName.Text = "Имя:";
             // 
-            // label2
+            // labelHeight
             // 
-            label2.AutoSize = true;
-            label2.Font = new Font("Microsoft Sans Serif", 15.75F, FontStyle.Regular, GraphicsUnit.Point, 204);
-            label2.Location = new Point(44, 270);
-            label2.Margin = new Padding(4, 0, 4, 0);
-            label2.Name = "label2";
-            label2.Size = new Size(65, 25);
-            label2.TabIndex = 15;
-            label2.Text = "Рост:";
+            labelHeight.AutoSize = true;
+            labelHeight.Font = new Font("Microsoft Sans Serif", 15.75F, FontStyle.Regular, GraphicsUnit.Point, 204);
+            labelHeight.Location = new Point(44, 270);
+            labelHeight.Margin = new Padding(4, 0, 4, 0);
+            labelHeight.Name = "labelHeight";
+            labelHeight.Size = new Size(65, 25);
+            labelHeight.TabIndex = 15;
+            labelHeight.Text = "Рост:";
             // 
             // numericUpDownHeight
             // 
@@ -111,16 +111,16 @@
             numericUpDownHeight.TabIndex = 14;
             numericUpDownHeight.Value = new decimal(new int[] { 120, 0, 0, 0 });
             // 
-            // label1
+            // labelChangeMinion
             // 
-            label1.AutoSize = true;
-            label1.Font = new Font("Microsoft Sans Serif", 26.25F, FontStyle.Regular, GraphicsUnit.Point, 204);
-            label1.Location = new Point(30, 67);
-            label1.Margin = new Padding(4, 0, 4, 0);
-            label1.Name = "label1";
-            label1.Size = new Size(325, 39);
-            label1.TabIndex = 13;
-            label1.Text = "Изменить миньона";
+            labelChangeMinion.AutoSize = true;
+            labelChangeMinion.Font = new Font("Microsoft Sans Serif", 26.25F, FontStyle.Regular, GraphicsUnit.Point, 204);
+            labelChangeMinion.Location = new Point(30, 67);
+            labelChangeMinion.Margin = new Padding(4, 0, 4, 0);
+            labelChangeMinion.Name = "labelChangeMinion";
+            labelChangeMinion.Size = new Size(325, 39);
+            labelChangeMinion.TabIndex = 13;
+            labelChangeMinion.Text = "Изменить миньона";
             // 
             // radioButtonOneEye
             // 
@@ -176,11 +176,11 @@
             ClientSize = new Size(910, 752);
             Controls.Add(UpdateButton);
             Controls.Add(textBoxName);
-            Controls.Add(label4);
-            Controls.Add(label3);
-            Controls.Add(label2);
+            Controls.Add(labelCountEyes);
+            Controls.Add(labelName);
+            Controls.Add(labelHeight);
             Controls.Add(numericUpDownHeight);
-            Controls.Add(label1);
+            Controls.Add(labelChangeMinion);
             Controls.Add(panel1);
             Controls.Add(pictureBoxBody);
             Margin = new Padding(4, 3, 4, 3);
@@ -201,11 +201,11 @@
 
         private System.Windows.Forms.Button UpdateButton;
         private System.Windows.Forms.TextBox textBoxName;
-        private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label labelCountEyes;
+        private System.Windows.Forms.Label labelName;
+        private System.Windows.Forms.Label labelHeight;
         private System.Windows.Forms.NumericUpDown numericUpDownHeight;
-        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label labelChangeMinion;
         private System.Windows.Forms.RadioButton radioButtonOneEye;
         private System.Windows.Forms.RadioButton radioButtonTwoEyes;
         private System.Windows.Forms.Panel panel1;

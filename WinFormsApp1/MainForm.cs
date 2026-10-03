@@ -71,6 +71,7 @@ namespace WinFormsApp
                 RefreshMinionsList(_logic.GetALlMinions());
             }
         }
+
         /// <summary>
         /// Открывает форму с созданием миньона
         /// </summary>
@@ -78,11 +79,15 @@ namespace WinFormsApp
         /// <param name="e">аргументы события</param>
         private void ButtonCreate_Click(object sender, EventArgs e)
         {
-
+            if (_imposterid != null)
+            {
+                MessageBox.Show("Сначала удалите предателя");
+                return;
+            }
             var createMinion = new CreateMinion(_logic);
             createMinion.ShowDialog();
             RefreshMinionsList(_logic.GetALlMinions());
-            textBox1.Text = "";
+            textBoxName.Text = "";
             radioButtonReset.Checked = true;
             if (_countMinions.HasValue && _countMinions.Value <= _logic.GetALlMinions().Count)
             {
@@ -98,6 +103,11 @@ namespace WinFormsApp
         /// <param name="e">аргументы события</param>
         private void ButtonUpdate_Click(object sender, EventArgs e)
         {
+            if (_imposterid != null)
+            {
+                MessageBox.Show("Сначала удалите предателя");
+                return;
+            }
             if (listViewMinions.SelectedItems.Count == 0)
             {
                 MessageBox.Show("Выберите миньона из списка");
@@ -108,7 +118,7 @@ namespace WinFormsApp
             var updateMinion = new UpdateMinion(_logic, minion);
             updateMinion.ShowDialog();
             RefreshMinionsList(_logic.GetALlMinions());
-            textBox1.Text = "";
+            textBoxName.Text = "";
             radioButtonReset.Checked = true;
             if (_updateid!= null && _updateid == updateMinionId)
             {
@@ -129,6 +139,11 @@ namespace WinFormsApp
                 MessageBox.Show("Выберите миньона из списка");
                 return;
             }
+            if ((int)listViewMinions.SelectedItems[0].Tag == _updateid)
+            {
+                MessageBox.Show("Выбранного миньона пока нельзя удалить");
+                return;
+            }
             _logic.RemoveMinion((int)listViewMinions.SelectedItems[0].Tag);
             MessageBox.Show("Миньон удален!");
             if (_logic.GetALlMinions().Count == 0)
@@ -137,10 +152,23 @@ namespace WinFormsApp
             }
             RefreshMinionsList(_logic.GetALlMinions());
             radioButtonReset.Checked = true;
-            if (_imposterid != null && _logic.GetMinionByID(_imposterid.Value) == null)
+            if (_imposterid != null)
             {
-                _imposterid = null;
-                Tasks();
+                bool exists;
+                try
+                {
+                    exists = _logic.GetMinionByID(_imposterid.Value) != null;
+                }
+                catch (ArgumentException)
+                {
+                    exists = false;
+                }
+
+                if (!exists)
+                {
+                    _imposterid = null;
+                    Tasks();
+                }
             }
         }
 
@@ -160,6 +188,7 @@ namespace WinFormsApp
         /// </summary>
         private void InitializeListViewMinions()
         {
+            listViewMinions.MultiSelect = false;
             listViewMinions.View = View.Details;
             listViewMinions.FullRowSelect = true;
             listViewMinions.GridLines = true;
@@ -221,8 +250,8 @@ namespace WinFormsApp
             }
             using (var g = Graphics.FromImage(bmp))
             {
-                Image body = minion.Height < 110 ? WinFormsApp1.Properties.Resources.Short
-                             : minion.Height < 125 ? WinFormsApp1.Properties.Resources.Medium
+                Image body = minion.Height < Logic.MiddleHeight ? WinFormsApp1.Properties.Resources.Short
+                             : minion.Height < Logic.HighHeight ? WinFormsApp1.Properties.Resources.Medium
                              : WinFormsApp1.Properties.Resources.High;
                 Image eyes = minion.HasTwoEyes ? WinFormsApp1.Properties.Resources.TwoEyes : WinFormsApp1.Properties.Resources.OneEye;
                 g.DrawImage(body, 0, 0, bmp.Width, bmp.Height);
@@ -241,7 +270,7 @@ namespace WinFormsApp
         /// <param name="e">аргументы события</param>
         private void ButtonResetSearch_Click(object sender, EventArgs e)
         {
-            textBox1.Text = "";
+            textBoxName.Text = "";
             RefreshMinionsList(_logic.GetALlMinions());
         }
 
@@ -252,9 +281,14 @@ namespace WinFormsApp
         /// <param name="e">аргументы события</param>
         private void TextBox1_TextChanged(object sender, EventArgs e)
         {
-            RefreshMinionsList(_logic.SearchByName(textBox1.Text));
+            RefreshMinionsList(_logic.SearchByName(textBoxName.Text));
         }
 
+        /// <summary>
+        /// Создает задание и начинает игру
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void ButtonStart_Click(object sender, EventArgs e)
         {
             buttonStart.Visible = false;
@@ -265,6 +299,9 @@ namespace WinFormsApp
             CreateTask();
         }
 
+        /// <summary>
+        /// Случайно вызывает задание
+        /// </summary>
         private void Tasks()
         {
             var tasks = new[] { GameTasks.CreateNew, GameTasks.UpdateMinion, GameTasks.FindImposter, GameTasks.Send };
@@ -277,12 +314,18 @@ namespace WinFormsApp
                 case GameTasks.UpdateMinion: UpdateTask(); break;
             }
         }
+        /// <summary>
+        /// Выводит информацию о задании по созданию миньона
+        /// </summary>
         private void CreateTask()
         {
             int needToCreate = _random.Next(1, 5);
             GruText.Text = $"Для учета требуется добавить {needToCreate} миньонов";
             _countMinions = _logic.GetALlMinions().Count + needToCreate;
         }
+        /// <summary>
+        /// Выводит информацию о задании по отправлению миньона с выбранным ростом
+        /// </summary>
         private void SendTask()
         {
             buttonSend.Visible = true;
@@ -290,6 +333,9 @@ namespace WinFormsApp
             _keyHeight = height.ElementAt(_random.Next(height.Count));
             GruText.Text = $"Мне тут нужен {_keyHeight} миньон\nВоспользуйся группировкой по росту и найди мне такого\nНу или для начала создай его";
         }
+        /// <summary>
+        /// Выводит информацию о задании по нахождению предателя
+        /// </summary>
         private void FindImposterTask()
         {
             if (_logic.GetALlMinions().Count != 0 )
@@ -301,17 +347,25 @@ namespace WinFormsApp
             }
             Tasks();
         }
+        /// <summary>
+        /// Выводит информацию о задании по изменению миньона
+        /// </summary>
         private void UpdateTask()
         {
             if (_logic.GetALlMinions().Count != 0)
             {
                 var updateminion = _logic.GetALlMinions()[_random.Next(_logic.GetALlMinions().Count)];
                 _updateid = updateminion.ID;
-                GruText.Text = $"Слушай, {updateminion}\n явно неправильно занесен в список.Попробуй изменить его данные";
+                GruText.Text = $"Слушай, {updateminion}\nявно неправильно занесен в список.Попробуй изменить его данные";
                 return;
             }
             Tasks();
         }
+        /// <summary>
+        /// Отправляет миньона на задание и удаляет его из списка
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void ButtonSend_Click(object sender, EventArgs e)
         {
             if (listViewMinions.SelectedItems.Count == 0)
@@ -321,8 +375,10 @@ namespace WinFormsApp
             }
             if ((_keyHeight == radioButtonHigh.Text && radioButtonHigh.Checked) || (_keyHeight == radioButtonMedium.Text && radioButtonMedium.Checked) || (_keyHeight == radioButtonShort.Text && radioButtonShort.Checked))
             {
+                _logic.RemoveMinion((int)listViewMinions.SelectedItems[0].Tag);
                 buttonSend.Visible = false;
                 Tasks();
+                RefreshMinionsList(_logic.GetALlMinions());
 
             }
             else

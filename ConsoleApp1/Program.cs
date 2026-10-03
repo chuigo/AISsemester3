@@ -8,11 +8,21 @@ using System.Threading.Tasks;
 using System.Threading;
 using Model;
 
-namespace ConsoleApp
+namespace ConsoleApp1
 {
     public class Program
     {
-        private static readonly Logic _logic = new Logic();
+        private static readonly Logic _logic = new Logic(); 
+        private static GameTasks _gameTasks;
+        private static readonly Random _random = new Random();
+        public enum GameTasks { FindImposter, Send, UpdateMinion, CreateNew }
+
+        private static int? _countMinions;
+        private static int? _imposterid;
+        private static string? _keyHeight;
+        private static int? _updateid;
+
+        private static string? _grutext;
         static void Main(string[] args)
         {
             string prehistory = "Грю устал считать своих приспешников, поэтому попросил вас составить учет всех миньонов";
@@ -22,13 +32,24 @@ namespace ConsoleApp
                 Thread.Sleep(50);
             }
             Thread.Sleep(1000);
+            while (Console.KeyAvailable) Console.ReadKey(true);
             Console.Clear();
+            CreateTask();
+            RenderScreen();
+        }
+        /// <summary>
+        /// Выводит главное меню
+        /// </summary>
+        private static void RenderScreen()
+        {
             while (true)
             {
-                
+                Console.WriteLine($"Грю: {_grutext}");
+                Console.WriteLine("------------------------------------------");
                 Console.WriteLine("1. Добавить миньона\n2. Удалить миньона\n" +
-                    "3. Изменить миньона\n4. Вывести всех миньонов\n5. Сгруппировать по росту\n" +
+                    "3. Изменить миньона\n4. Вывести всех миньонов\n5. Сгруппировать по росту и отправить на задание\n" +
                     "6. Поиск миньонов по имени\n7. Выход");
+                Console.WriteLine("------------------------------------------");
                 Console.WriteLine("Выберите действие:");
                 string choice = Console.ReadLine();
                 switch (choice)
@@ -47,7 +68,71 @@ namespace ConsoleApp
                 Console.ReadKey();
                 Console.Clear();
             }
+
         }
+        /// <summary>
+        /// Случайно выбирает следующее задание
+        /// </summary>
+        private static void Tasks()
+        {
+            var tasks = new[] { GameTasks.CreateNew, GameTasks.UpdateMinion, GameTasks.FindImposter, GameTasks.Send };
+            _gameTasks = tasks[_random.Next(tasks.Length)];
+            switch (_gameTasks)
+            {
+                case GameTasks.CreateNew: CreateTask(); break;
+                case GameTasks.Send: SendTask(); break;
+                case GameTasks.FindImposter: FindImposterTask(); break;
+                case GameTasks.UpdateMinion: UpdateTask(); break;
+            }
+        }
+        /// <summary>
+        /// Выводит информацию о задании по созданию миньона
+        /// </summary>
+        private static void CreateTask()
+        {
+            int needToCreate = _random.Next(1, 5);
+            _grutext = $"Для учета требуется добавить {needToCreate} миньонов";
+            _countMinions = _logic.GetALlMinions().Count + needToCreate;
+        }
+        /// <summary>
+        /// Выводит информацию о задании по отправлению миньона с выбранным ростом
+        /// </summary>
+        private static void SendTask()
+        {
+            List<string> height = _logic.GroupByHeight().Keys.ToList();
+            _keyHeight = height.ElementAt(_random.Next(height.Count));
+            _grutext = $"Мне тут нужен {_keyHeight} миньон. Сгруппируй миньонов по росту и отправь нужного на задание";
+        }
+        /// <summary>
+        /// Выводит информацию о задании по нахождению предателя
+        /// </summary>
+        private static void FindImposterTask()
+        {
+            if (_logic.GetALlMinions().Count != 0)
+            {
+                var imposter = _logic.GetALlMinions()[_random.Next(_logic.GetALlMinions().Count)];
+                _imposterid = imposter.ID;
+                _grutext = $"Я тут узнал, что среди миньонов есть один предатель.\nЭто {imposter}\nСрочно удали его!";
+                return;
+            }
+            Tasks();
+        }
+        /// <summary>
+        /// Выводит информацию о задании по изменению миньона
+        /// </summary>
+        private static void UpdateTask()
+        {
+            if (_logic.GetALlMinions().Count != 0)
+            {
+                var updateminion = _logic.GetALlMinions()[_random.Next(_logic.GetALlMinions().Count)];
+                _updateid = updateminion.ID;
+                _grutext = $"Слушай, {updateminion}\nявно неправильно занесен в список.Попробуй изменить его данные";
+                return;
+            }
+            Tasks();
+        }
+
+
         /// <summary>
         /// Группировка миньонов по росту
         /// </summary>
@@ -59,11 +144,35 @@ namespace ConsoleApp
             Dictionary<string,List<Minion>> dictionaryHeight = _logic.GroupByHeight();
             string[] key = dictionaryHeight.Keys.ToArray();
             _logic.GroupByHeight().TryGetValue(key[choice-1], out List<Minion> list);
+            if (list.Count == 0) { Console.WriteLine("Нет миньонов с таким ростом"); return; }
             foreach (var minion in list)
             {
                 Console.WriteLine(minion);
             }
-            if (list.Count == 0) { Console.WriteLine("Нет миньонов с таким ростом"); }
+            if (_gameTasks == GameTasks.Send && key[choice-1] ==_keyHeight)
+            {
+                Console.WriteLine("Введите ID миньона, которого хотите отправить на задание:");
+                while (true)
+                {
+                    try
+                    {
+                        int id = IntCheck();
+                        if (!list.Any(m => m.ID == id))
+                        {
+                            Console.WriteLine("Выбранного id нет в данной категории");
+                            continue;
+
+                        }
+                        _logic.RemoveMinion(id);
+                        break;
+                    }
+                    catch (ArgumentException ex)
+                    {
+                        Console.WriteLine(ex.Message);
+                    }
+                }
+                Console.WriteLine($"Выбранный миньон отправлен на задание");
+            }
 
 
         }
@@ -73,22 +182,38 @@ namespace ConsoleApp
         /// </summary>
         private static void AddMinion()
         {
-            Console.WriteLine("Введите имя миньона:");
-            string name = StringCheck();
-            Console.WriteLine("Введите рост миньона:");
-            int height = IntCheck(Logic.MinHeight,Logic.MaxHeight);
-            Console.WriteLine("Введите количество глаз миньона:");
-            bool istwoeyes = IntCheck(1, 2) == 2;
-            try
+            if (_imposterid != null)
             {
-                _logic.AddMinion(name, height, istwoeyes);
-                Console.WriteLine("Миньон успешно добавлен!");
+                Console.WriteLine("Сначала срочно удали предателя");
+                Console.ReadKey();
+                return;
             }
-            catch (ArgumentException ex)
+            while (true)
             {
-                Console.WriteLine($"Ошибка: {ex.Message}");
+                try
+                {
+                    Console.WriteLine("Введите имя миньона:");
+                    string name = Console.ReadLine();
+                    Console.WriteLine("Введите рост миньона:");
+                    int height = IntCheck();
+                    Console.WriteLine("Введите количество глаз миньона:");
+                    bool istwoeyes = IntCheck(1, 2) == 2;
+                    _logic.AddMinion(name, height, istwoeyes);
+                    Console.WriteLine("Миньон успешно добавлен!");
+                    break;
+                }
+                catch (ArgumentException ex)
+                {
+                    Console.WriteLine($"Ошибка: {ex.Message}");
+                    Console.WriteLine();
+                }
             }
-            
+            if (_countMinions.HasValue && _countMinions.Value <= _logic.GetALlMinions().Count)
+            {
+                _countMinions = null;
+                Tasks();
+            }
+
         }
         /// <summary>
         /// Выводит список миньонов
@@ -119,10 +244,38 @@ namespace ConsoleApp
             }
             Console.WriteLine();
             Console.WriteLine("Введите ID миньона, которого хотите удалить:");
-            int[] range = _logic.GetALlMinions().Select(m => m.ID).ToArray();
-            int id = IntCheck(range);
-            _logic.RemoveMinion(id);
+            while (true)
+            {
+                try
+                {
+                    int id = IntCheck();
+                    _logic.RemoveMinion(id);
+                    break;
+                }
+                catch (ArgumentException ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
+            }
             Console.WriteLine($"Выбранный миньон удален");
+            if (_imposterid != null)
+            {
+                bool exists;
+                try
+                {
+                    exists = _logic.GetMinionByID(_imposterid.Value) != null;
+                }
+                catch (ArgumentException)
+                {
+                    exists = false;
+                }
+
+                if (!exists)
+                {
+                    _imposterid = null;
+                    Tasks();
+                }
+            }
 
         }
         /// <summary>
@@ -134,45 +287,55 @@ namespace ConsoleApp
             {
                 return;
             }
+            if (_imposterid != null)
+            {
+                Console.WriteLine("Сначала срочно удали предателя");
+                Console.ReadKey();
+                return;
+            }
             Console.WriteLine();
             Console.WriteLine("Введите ID миньона, которого хотите изменить:");
-            int[] range = _logic.GetALlMinions().Select(m => m.ID).ToArray();
-            int id = IntCheck(range);
-            Console.WriteLine($"Выбранный миньон: {_logic.GetMinionByID(id)}");
-
-            Console.WriteLine("Введите имя миньона:");
-            string name = StringCheck();
-            Console.WriteLine("Введите рост миньона:");
-            int height = IntCheck(90, 200);
-            Console.WriteLine("Введите количество глаз миньона:");
-            bool istwoeyes = IntCheck(1, 2) == 2;
-
-            try
-            {
-                _logic.UpdateMinion(id, name, height, istwoeyes);
-                Console.WriteLine("Миньон успешно изменен!");
-            }
-            catch (ArgumentException ex)
-            {
-                Console.WriteLine($"Ошибка: {ex.Message}");
-            }
-        }
-        /// <summary>
-        /// Проверяет введенное значение на строку
-        /// </summary>
-        /// <returns>string</returns>
-        private static string StringCheck()
-        {
+            int id;
             while (true)
             {
-                string check = Console.ReadLine();
-                if (!string.IsNullOrWhiteSpace(check))
+                try
                 {
-                    return check;
+                    id = IntCheck();
+                    _logic.GetMinionByID(id);
+                    break;
                 }
-                Console.WriteLine("Строка не может быть пустой, попробуйте еще раз:");
+                catch ( ArgumentException ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
+            }
+            Console.WriteLine($"Выбранный миньон: {_logic.GetMinionByID(id)}");
+            while (true)
+            {
+                try
+                {
+                    Console.WriteLine("Введите имя миньона (если не хотите менять данный параментр нажмите Enter):");
+                    string? name = Console.ReadLine();
+                    Console.WriteLine("Введите рост миньона (если не хотите менять данный параментр нажмите Enter):");
+                    int? height = IntCheckOrNull();
+                    Console.WriteLine("Введите количество глаз миньона (если не хотите менять данный параментр нажмите Enter):");
+                    bool? istwoeyes = BoolCheckOrNull();
+                    _logic.UpdateMinion(id, name, height, istwoeyes);
+                    Console.WriteLine("Миньон успешно изменен!");
+                    break;
+                }
+                catch (ArgumentException ex)
+                {
+                    Console.WriteLine($"Ошибка: {ex.Message}");
+                }
+            }
+            if (_updateid != null && _updateid == id)
+            {
+                _updateid = null;
+                Tasks();
             }
         }
+
         /// <summary>
         /// Проверяет введенное значение на число и нахождение этого числа в заданном диапазоне
         /// </summary>
@@ -199,28 +362,58 @@ namespace ConsoleApp
                 }
             }
         }
+
         /// <summary>
-        /// Проверяет введенное значение на число и нахождение этого числа в заданном массиве
+        /// проверяет введенное знчение на число
         /// </summary>
-        /// <param name="range">Массив чисел</param>
-        /// <returns></returns>
-        private static int IntCheck(int[] range)
+        /// <returns>int число</returns>
+        private static int IntCheck()
         {
             while (true)
             {
                 try
                 {
                     int check = int.Parse(Console.ReadLine());
-                    if (range.Contains(check))
-                    {
-                        return check;
-                    }
-                    Console.WriteLine($"Введенного ID не существует");
+                    return check;
                 }
                 catch
                 {
                     Console.WriteLine("Введенное значение должно быть числом");
                 }
+            }
+        }
+        /// <summary>
+        /// Проверяет введенное значение на 1,2 или null
+        /// </summary>
+        /// <returns>bool или null</returns>
+        private static bool? BoolCheckOrNull()
+        {
+            while (true)
+            {
+                var input = Console.ReadLine();
+                if (string.IsNullOrWhiteSpace(input)) return null;
+
+                if (input == "1") return false;
+                if (input == "2") return true;
+
+                Console.WriteLine("Введите 1, 2 или Enter:");
+            }
+        }
+        /// <summary>
+        /// Проверяет введенное значение на число или null
+        /// </summary>
+        /// <returns>int число или null</returns>
+        private static int? IntCheckOrNull()
+        {
+            while (true)
+            {
+                var input = Console.ReadLine();
+                if (string.IsNullOrWhiteSpace(input)) return null;
+
+                if (int.TryParse(input, out var value))
+                    return value;
+
+                Console.WriteLine("Введенное значение должно быть числом");
             }
         }
 

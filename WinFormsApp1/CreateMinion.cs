@@ -37,8 +37,8 @@ namespace WinFormsApp
             using (var g = Graphics.FromImage(bmp))
             {
                 int number = (int)numericUpDownHeight.Value;
-                Image body = number < 120 ? WinFormsApp1.Properties.Resources.Short
-                             : number < 170 ? WinFormsApp1.Properties.Resources.Medium
+                Image body = number < Logic.MiddleHeight ? WinFormsApp1.Properties.Resources.Short
+                             : number < Logic.HighHeight ? WinFormsApp1.Properties.Resources.Medium
                              : WinFormsApp1.Properties.Resources.High;
                 Image eyes = radioButtonOneEyes.Checked ? WinFormsApp1.Properties.Resources.OneEye : WinFormsApp1.Properties.Resources.TwoEyes;
                 g.DrawImage(body, 0, 0, bmp.Width, bmp.Height);

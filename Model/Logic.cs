@@ -24,7 +24,7 @@ namespace Model
         /// <param name="name">имя миньона</param>
         /// <param name="height">рость миньона</param>
         /// <param name="hastwoeyes">есть ли 2 глаза у миньона</param>
-        /// <exception cref="ArgumentException">исключение: неправильный ввод</exception>
+        /// <exception cref="ArgumentException">исключение: неправильный ввод данных</exception>
         public void AddMinion(string name, int height, bool hastwoeyes)
         {
             if (string.IsNullOrWhiteSpace(name))
@@ -66,26 +66,17 @@ namespace Model
         /// <param name="name">имя миньона</param>
         /// <param name="height">рост миньона</param>
         /// <param name="hastwoeyes">есть ли 2 глаза у миньона</param>
-        /// <exception cref="ArgumentException">исключение: неправильный ввод</exception>
+        /// <exception cref="ArgumentException">исключение: неправильный ввод данных</exception>
         public void UpdateMinion(int id, string? name, int? height, bool? hastwoeyes)
         {
             var minion = _minions.FirstOrDefault(x => x.ID == id);
             if (minion == null)
                 throw new ArgumentException($"Миньон с id {id} не найден");
-
-            if (name != null)
-            {
-                if (string.IsNullOrWhiteSpace(name))
-                {
-                    throw new ArgumentException("Имя не может быть пустым");
-                }
-
-            }
             if (height < MinHeight || height > MaxHeight)
             {
                 throw new ArgumentException($"Рост должен быть в диапазоне от {MinHeight} до {MaxHeight}");
             }
-            if (name != null) minion.Name = name;
+            if (!string.IsNullOrWhiteSpace(name)) minion.Name = name;
             if (height.HasValue) minion.Height = height.Value;
             if (hastwoeyes.HasValue) minion.HasTwoEyes = hastwoeyes.Value;
         }
@@ -97,7 +88,13 @@ namespace Model
         /// <returns>миьнон</returns>
         public Minion GetMinionByID(int id)
         {
-            return _minions.FirstOrDefault(x => x.ID == id);
+            var minion = _minions.FirstOrDefault(x => x.ID == id);
+            if (minion == null)
+            {
+                throw new ArgumentException($"Миньона с таким id не существует");
+            }
+            return minion;
+
         }
         /// <summary>
         /// Группирует миньонов по росту

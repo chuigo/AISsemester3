@@ -33,17 +33,17 @@
             ButtonUpdate = new Button();
             GruText = new Label();
             pictureBoxBody = new PictureBox();
-            label3 = new Label();
+            labelGroup = new Label();
             panel1 = new Panel();
             radioButtonReset = new RadioButton();
             radioButtonShort = new RadioButton();
             radioButtonMedium = new RadioButton();
             radioButtonHigh = new RadioButton();
             labelName = new Label();
-            label5 = new Label();
+            labelOption = new Label();
             listViewMinions = new ListView();
-            label4 = new Label();
-            textBox1 = new TextBox();
+            labelSearch = new Label();
+            textBoxName = new TextBox();
             buttonResetSearch = new Button();
             pictureBox1 = new PictureBox();
             buttonStart = new Button();
@@ -119,16 +119,16 @@
             pictureBoxBody.TabIndex = 4;
             pictureBoxBody.TabStop = false;
             // 
-            // label3
+            // labelGroup
             // 
-            label3.AutoSize = true;
-            label3.Font = new Font("Microsoft Sans Serif", 11.25F, FontStyle.Regular, GraphicsUnit.Point, 204);
-            label3.Location = new Point(677, 541);
-            label3.Margin = new Padding(4, 0, 4, 0);
-            label3.Name = "label3";
-            label3.Size = new Size(180, 18);
-            label3.TabIndex = 17;
-            label3.Text = "Сгруппировать по росту:";
+            labelGroup.AutoSize = true;
+            labelGroup.Font = new Font("Microsoft Sans Serif", 11.25F, FontStyle.Regular, GraphicsUnit.Point, 204);
+            labelGroup.Location = new Point(677, 541);
+            labelGroup.Margin = new Padding(4, 0, 4, 0);
+            labelGroup.Name = "labelGroup";
+            labelGroup.Size = new Size(180, 18);
+            labelGroup.TabIndex = 17;
+            labelGroup.Text = "Сгруппировать по росту:";
             // 
             // panel1
             // 
@@ -205,16 +205,16 @@
             labelName.TabIndex = 19;
             labelName.TextAlign = ContentAlignment.MiddleCenter;
             // 
-            // label5
+            // labelOption
             // 
-            label5.AutoSize = true;
-            label5.Font = new Font("Microsoft Sans Serif", 11.25F, FontStyle.Regular, GraphicsUnit.Point, 204);
-            label5.Location = new Point(273, 187);
-            label5.Margin = new Padding(4, 0, 4, 0);
-            label5.Name = "label5";
-            label5.Size = new Size(147, 18);
-            label5.TabIndex = 20;
-            label5.Text = "выбранный миньон:";
+            labelOption.AutoSize = true;
+            labelOption.Font = new Font("Microsoft Sans Serif", 11.25F, FontStyle.Regular, GraphicsUnit.Point, 204);
+            labelOption.Location = new Point(273, 187);
+            labelOption.Margin = new Padding(4, 0, 4, 0);
+            labelOption.Name = "labelOption";
+            labelOption.Size = new Size(147, 18);
+            labelOption.TabIndex = 20;
+            labelOption.Text = "выбранный миньон:";
             // 
             // listViewMinions
             // 
@@ -227,25 +227,25 @@
             listViewMinions.UseCompatibleStateImageBehavior = false;
             listViewMinions.SelectedIndexChanged += ListViewMinions_SelectedIndexChanged;
             // 
-            // label4
+            // labelSearch
             // 
-            label4.AutoSize = true;
-            label4.Font = new Font("Microsoft Sans Serif", 11.25F, FontStyle.Regular, GraphicsUnit.Point, 204);
-            label4.Location = new Point(677, 764);
-            label4.Margin = new Padding(4, 0, 4, 0);
-            label4.Name = "label4";
-            label4.Size = new Size(124, 18);
-            label4.TabIndex = 24;
-            label4.Text = "Поиск по имени:";
+            labelSearch.AutoSize = true;
+            labelSearch.Font = new Font("Microsoft Sans Serif", 11.25F, FontStyle.Regular, GraphicsUnit.Point, 204);
+            labelSearch.Location = new Point(677, 764);
+            labelSearch.Margin = new Padding(4, 0, 4, 0);
+            labelSearch.Name = "labelSearch";
+            labelSearch.Size = new Size(124, 18);
+            labelSearch.TabIndex = 24;
+            labelSearch.Text = "Поиск по имени:";
             // 
-            // textBox1
+            // textBoxName
             // 
-            textBox1.Location = new Point(680, 792);
-            textBox1.Margin = new Padding(4, 3, 4, 3);
-            textBox1.Name = "textBox1";
-            textBox1.Size = new Size(233, 23);
-            textBox1.TabIndex = 25;
-            textBox1.TextChanged += TextBox1_TextChanged;
+            textBoxName.Location = new Point(680, 792);
+            textBoxName.Margin = new Padding(4, 3, 4, 3);
+            textBoxName.Name = "textBoxName";
+            textBoxName.Size = new Size(233, 23);
+            textBoxName.TabIndex = 25;
+            textBoxName.TextChanged += TextBox1_TextChanged;
             // 
             // buttonResetSearch
             // 
@@ -301,13 +301,13 @@
             Controls.Add(buttonStart);
             Controls.Add(pictureBox1);
             Controls.Add(buttonResetSearch);
-            Controls.Add(textBox1);
-            Controls.Add(label4);
+            Controls.Add(textBoxName);
+            Controls.Add(labelSearch);
             Controls.Add(listViewMinions);
-            Controls.Add(label5);
+            Controls.Add(labelOption);
             Controls.Add(labelName);
             Controls.Add(panel1);
-            Controls.Add(label3);
+            Controls.Add(labelGroup);
             Controls.Add(pictureBoxBody);
             Controls.Add(GruText);
             Controls.Add(ButtonUpdate);
@@ -332,17 +332,17 @@
         private System.Windows.Forms.Button ButtonUpdate;
         private System.Windows.Forms.Label GruText;
         private System.Windows.Forms.PictureBox pictureBoxBody;
-        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label labelGroup;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.RadioButton radioButtonShort;
         private System.Windows.Forms.RadioButton radioButtonMedium;
         private System.Windows.Forms.RadioButton radioButtonHigh;
         private System.Windows.Forms.Label labelName;
-        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Label labelOption;
         private System.Windows.Forms.ListView listViewMinions;
         private System.Windows.Forms.RadioButton radioButtonReset;
-        private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.Label labelSearch;
+        private System.Windows.Forms.TextBox textBoxName;
         private System.Windows.Forms.Button buttonResetSearch;
         private System.Windows.Forms.PictureBox pictureBox1;
         private Button buttonStart;
