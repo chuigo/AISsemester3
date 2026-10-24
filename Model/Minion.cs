@@ -9,15 +9,18 @@ namespace Model
     /// <summary>
     /// Миньон
     /// </summary>
-    public class Minion
+    public class Minion : IDomainObject
     {
         public int ID { get; set; }
         public string Name { get; set; }
         public int Height { get; set; }
-        public bool HasTwoEyes { get; set; }   
-        public Minion(int id, string name, int height, bool hastwoeyes)
+        public bool HasTwoEyes { get; set; }  
+        public Minion()
         {
-            ID = id;
+
+        }
+        public Minion( string name, int height, bool hastwoeyes)
+        {
             Name = name;
             Height = height;
             HasTwoEyes = hastwoeyes;

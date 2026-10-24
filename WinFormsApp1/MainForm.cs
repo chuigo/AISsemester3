@@ -236,7 +236,7 @@ namespace WinFormsApp
 
             var minion = _logic.GetMinionByID((int)listViewMinions.SelectedItems[0].Tag);
             var bmp = new Bitmap(pictureBoxBody.Width, pictureBoxBody.Height);
-            if (_imposterid != null && minion == _logic.GetMinionByID(_imposterid.Value))
+            if (_imposterid != null && minion.ID == _imposterid.Value)
             {
                 using (var g = Graphics.FromImage(bmp))
                 {
