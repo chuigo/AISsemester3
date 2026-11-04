@@ -13,13 +13,13 @@ namespace DataAccessLayer
     public interface IRepository<T> where T : IDomainObject
     {
         /// <summary>
-        /// Создает новую сущность в бд
+        /// Создает новую сущность в хранилище
         /// </summary>
         /// <param name="obj">сущность для создания</param>
         void Add(T obj);
 
         /// <summary>
-        /// Возвращает всех сущностей из бд
+        /// Возвращает всех сущностей из хранилища
         /// </summary>
         /// <returns> коллекция сущностей типа T</returns>
         IEnumerable<T> GetAll();
@@ -32,13 +32,13 @@ namespace DataAccessLayer
         T? ReadByID(int id);
 
         /// <summary>
-        /// Обновляет существующую сущность в бд
+        /// Обновляет существующую сущность в хранилище
         /// </summary>
         /// <param name="obj">сущность для изменения</param>
         void Update(T obj);
 
         /// <summary>
-        /// Удаляет сущность с указанным id из бд
+        /// Удаляет сущность с указанным id из хранилища
         /// </summary>
         /// <param name="id">идентификатор сущности</param>
         void Delete(int id);

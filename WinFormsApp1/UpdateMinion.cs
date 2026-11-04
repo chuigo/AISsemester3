@@ -7,7 +7,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using BuisnessLogic;
 using Model;
+using WinFormsApp1;
 
 namespace WinFormsApp
 {
@@ -15,19 +17,19 @@ namespace WinFormsApp
     {
         private readonly Logic _logic;
         private readonly Minion _minion;
-        public UpdateMinion(Logic logic, Minion minion)
+        public UpdateMinion(Logic logic, int id)
         {
             InitializeComponent();
             _logic = logic;
-            _minion = minion;
+            _minion = _logic.GetMinionByID(id);
             numericUpDownHeight.ValueChanged += (s, e) => UpdateImage();
             radioButtonTwoEyes.CheckedChanged += (s, e) => UpdateImage();
             radioButtonOneEye.CheckedChanged += (s, e) => UpdateImage();
-            textBoxName.Text = minion.Name;
-            numericUpDownHeight.Value = minion.Height;
-            numericUpDownHeight.Maximum = Logic.MaxHeight;
-            numericUpDownHeight.Minimum = Logic.MinHeight;
-            if (minion.HasTwoEyes)
+            textBoxName.Text = _minion.Name;
+            numericUpDownHeight.Value = _minion.Height;
+            numericUpDownHeight.Maximum = HeightCategories.MaxHeight;
+            numericUpDownHeight.Minimum = HeightCategories.MinHeight;
+            if (_minion.HasTwoEyes)
             {
                 radioButtonTwoEyes.Checked = true;
             }
@@ -43,19 +45,10 @@ namespace WinFormsApp
         /// </summary>
         private void UpdateImage()
         {
-            var bmp = new Bitmap(pictureBoxBody.Width, pictureBoxBody.Height);
-            using (var g = Graphics.FromImage(bmp))
-            {
-                int number = (int)numericUpDownHeight.Value;
-                Image body = number < Logic.MiddleHeight ? WinFormsApp1.Properties.Resources.Short
-                             : number < Logic.HighHeight ? WinFormsApp1.Properties.Resources.Medium
-                             : WinFormsApp1.Properties.Resources.High;
-                Image eyes = radioButtonOneEye.Checked ? WinFormsApp1.Properties.Resources.OneEye : WinFormsApp1.Properties.Resources.TwoEyes;
-                g.DrawImage(body, 0, 0, bmp.Width, bmp.Height);
-                g.DrawImage(eyes, 0, 0, bmp.Width, bmp.Height);
-            }
+            var size = pictureBoxBody.Size;
+            var image = ImageRender.Render(size, (int)numericUpDownHeight.Value, !radioButtonOneEye.Checked);
             var old = pictureBoxBody.Image;
-            pictureBoxBody.Image = bmp;
+            pictureBoxBody.Image = image;
             old?.Dispose();
         }
         /// <summary>

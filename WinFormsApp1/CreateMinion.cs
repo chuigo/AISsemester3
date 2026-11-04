@@ -1,4 +1,4 @@
-﻿using System;
+﻿    using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -8,6 +8,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Model;
+using BuisnessLogic;
+using WinFormsApp1;
+
 
 namespace WinFormsApp
 {
@@ -22,8 +25,8 @@ namespace WinFormsApp
             radionButtonTwoEyes.CheckedChanged += (s, e) => UpdateImage();
             radioButtonOneEyes.CheckedChanged += (s, e) => UpdateImage();
             radioButtonOneEyes.Checked = true;
-            numericUpDownHeight.Maximum = Logic.MaxHeight;
-            numericUpDownHeight.Minimum = Logic.MinHeight;
+            numericUpDownHeight.Maximum = HeightCategories.MaxHeight;
+            numericUpDownHeight.Minimum = HeightCategories.MinHeight;
             this.Shown += (s, e) => UpdateImage();
 
         }
@@ -33,21 +36,13 @@ namespace WinFormsApp
         /// </summary>
         private void UpdateImage()
         {
-            var bmp = new Bitmap(pictureBoxBody.Width, pictureBoxBody.Height);
-            using (var g = Graphics.FromImage(bmp))
-            {
-                int number = (int)numericUpDownHeight.Value;
-                Image body = number < Logic.MiddleHeight ? WinFormsApp1.Properties.Resources.Short
-                             : number < Logic.HighHeight ? WinFormsApp1.Properties.Resources.Medium
-                             : WinFormsApp1.Properties.Resources.High;
-                Image eyes = radioButtonOneEyes.Checked ? WinFormsApp1.Properties.Resources.OneEye : WinFormsApp1.Properties.Resources.TwoEyes;
-                g.DrawImage(body, 0, 0, bmp.Width, bmp.Height);
-                g.DrawImage(eyes, 0, 0, bmp.Width, bmp.Height);
-            }
+            var size = pictureBoxBody.Size;
+            var image = ImageRender.Render(size, (int)numericUpDownHeight.Value, !radioButtonOneEyes.Checked);
             var old = pictureBoxBody.Image;
-            pictureBoxBody.Image = bmp;
+            pictureBoxBody.Image = image;
             old?.Dispose();
         }
+
         /// <summary>
         /// Создает миньона
         /// </summary>

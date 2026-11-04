@@ -95,7 +95,6 @@
             // 
             // GruText
             // 
-            GruText.AutoSize = true;
             GruText.BorderStyle = BorderStyle.Fixed3D;
             GruText.Cursor = Cursors.WaitCursor;
             GruText.Font = new Font("Microsoft Sans Serif", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 204);
@@ -104,7 +103,7 @@
             GruText.Margin = new Padding(4, 0, 4, 0);
             GruText.Name = "GruText";
             GruText.RightToLeft = RightToLeft.No;
-            GruText.Size = new Size(96, 26);
+            GruText.Size = new Size(634, 91);
             GruText.TabIndex = 3;
             GruText.Text = "Миньоны";
             GruText.UseWaitCursor = true;

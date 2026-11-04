@@ -11,25 +11,22 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Microsoft.VisualBasic;
 using Model;
+using BuisnessLogic;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.Button;
+using WinFormsApp1;
+using Game;
 
 namespace WinFormsApp
 {
-    public enum GameTasks { FindImposter, Send, UpdateMinion, CreateNew }
     public partial class MainForm : Form
     {
-        private readonly Logic _logic = new Logic();
-        private GameTasks _gameTasks;
+        private readonly Logic _logic;
+        private GameSession _gameSession;
         private readonly Random _random = new Random();
-
-        private int? _countMinions;
-        private int? _imposterid;
-        private string? _keyHeight;
-        private int? _updateid;
-
-        public MainForm()
+        public MainForm(Logic logic)
         {
+            _logic = logic;
             InitializeComponent();
             InitializeListViewMinions();
             RefreshMinionsList(_logic.GetALlMinions());
@@ -44,7 +41,18 @@ namespace WinFormsApp
             ButtonUpdate.Visible = false;
             ButtonDelete.Visible = false;
             buttonSend.Visible = false;
-
+            this.FormClosed += MainForm_FormClosed;
+        }
+        /// <summary>
+        /// Обновляет ui в зависимости от текущего состояния игры 
+        /// </summary>
+        private void UpdateUITask()
+        {
+            GruText.Text = _gameSession.GruText;
+            if (_gameSession.CurrentTask == GameTasks.Send)
+            {
+                buttonSend.Visible = true;
+            }
         }
 
         /// <summary>
@@ -79,7 +87,7 @@ namespace WinFormsApp
         /// <param name="e">аргументы события</param>
         private void ButtonCreate_Click(object sender, EventArgs e)
         {
-            if (_imposterid != null)
+            if (_gameSession.ImposterExist())
             {
                 MessageBox.Show("Сначала удалите предателя");
                 return;
@@ -89,11 +97,7 @@ namespace WinFormsApp
             RefreshMinionsList(_logic.GetALlMinions());
             textBoxName.Text = "";
             radioButtonReset.Checked = true;
-            if (_countMinions.HasValue && _countMinions.Value <= _logic.GetALlMinions().Count)
-            {
-                _countMinions = null;
-                Tasks();
-            }
+            _gameSession.CompleteCreate();
         }
 
         /// <summary>
@@ -103,7 +107,7 @@ namespace WinFormsApp
         /// <param name="e">аргументы события</param>
         private void ButtonUpdate_Click(object sender, EventArgs e)
         {
-            if (_imposterid != null)
+            if (_gameSession.ImposterExist())
             {
                 MessageBox.Show("Сначала удалите предателя");
                 return;
@@ -113,18 +117,13 @@ namespace WinFormsApp
                 MessageBox.Show("Выберите миньона из списка");
                 return;
             }
-            int updateMinionId = (int)listViewMinions.SelectedItems[0].Tag;
-            var minion = _logic.GetMinionByID(updateMinionId);
-            var updateMinion = new UpdateMinion(_logic, minion);
+            int id = (int)listViewMinions.SelectedItems[0].Tag;
+            var updateMinion = new UpdateMinion(_logic, id);
             updateMinion.ShowDialog();
             RefreshMinionsList(_logic.GetALlMinions());
             textBoxName.Text = "";
             radioButtonReset.Checked = true;
-            if (_updateid!= null && _updateid == updateMinionId)
-            {
-                _updateid = null;
-                Tasks();
-            }
+            _gameSession.CompleteUpdate(id);
         }
 
         /// <summary>
@@ -139,12 +138,13 @@ namespace WinFormsApp
                 MessageBox.Show("Выберите миньона из списка");
                 return;
             }
-            if ((int)listViewMinions.SelectedItems[0].Tag == _updateid)
+            int id = (int)listViewMinions.SelectedItems[0].Tag;
+            if (!_gameSession.CanDelete(id))
             {
                 MessageBox.Show("Выбранного миньона пока нельзя удалить");
                 return;
             }
-            _logic.RemoveMinion((int)listViewMinions.SelectedItems[0].Tag);
+            _logic.RemoveMinion(id);
             MessageBox.Show("Миньон удален!");
             if (_logic.GetALlMinions().Count == 0)
             {
@@ -152,24 +152,7 @@ namespace WinFormsApp
             }
             RefreshMinionsList(_logic.GetALlMinions());
             radioButtonReset.Checked = true;
-            if (_imposterid != null)
-            {
-                bool exists;
-                try
-                {
-                    exists = _logic.GetMinionByID(_imposterid.Value) != null;
-                }
-                catch (ArgumentException)
-                {
-                    exists = false;
-                }
-
-                if (!exists)
-                {
-                    _imposterid = null;
-                    Tasks();
-                }
-            }
+            _gameSession.CompleteImposter(id);
         }
 
         /// <summary>
@@ -233,32 +216,11 @@ namespace WinFormsApp
                 ClearPictureBox();
                 return;
             }
-
             var minion = _logic.GetMinionByID((int)listViewMinions.SelectedItems[0].Tag);
-            var bmp = new Bitmap(pictureBoxBody.Width, pictureBoxBody.Height);
-            if (_imposterid != null && minion.ID == _imposterid.Value)
-            {
-                using (var g = Graphics.FromImage(bmp))
-                {
-                    Image imposter = WinFormsApp1.Properties.Resources.imposter;
-                    g.DrawImage(imposter, 0, 0, bmp.Width, bmp.Height);
-                }
-
-                pictureBoxBody.Image = bmp;
-                labelName.Text = minion.Name;
-                return;
-            }
-            using (var g = Graphics.FromImage(bmp))
-            {
-                Image body = minion.Height < Logic.MiddleHeight ? WinFormsApp1.Properties.Resources.Short
-                             : minion.Height < Logic.HighHeight ? WinFormsApp1.Properties.Resources.Medium
-                             : WinFormsApp1.Properties.Resources.High;
-                Image eyes = minion.HasTwoEyes ? WinFormsApp1.Properties.Resources.TwoEyes : WinFormsApp1.Properties.Resources.OneEye;
-                g.DrawImage(body, 0, 0, bmp.Width, bmp.Height);
-                g.DrawImage(eyes, 0, 0, bmp.Width, bmp.Height);
-            }
+            var size = pictureBoxBody.Size;
+            var image = ImageRender.Render(size, minion.Height, minion.HasTwoEyes, _gameSession.ImposterID == minion.ID);
             var old = pictureBoxBody.Image;
-            pictureBoxBody.Image = bmp;
+            pictureBoxBody.Image = image;
             old?.Dispose();
             labelName.Text = minion.Name;
         }
@@ -295,72 +257,12 @@ namespace WinFormsApp
             ButtonCreate.Visible = true;
             ButtonDelete.Visible = true;
             ButtonUpdate.Visible = true;
-            _gameTasks = GameTasks.CreateNew;
-            CreateTask();
+            _gameSession = new GameSession(_logic);
+            _gameSession.TaskChanged += UpdateUITask;
+            UpdateUITask();
         }
 
-        /// <summary>
-        /// Случайно вызывает задание
-        /// </summary>
-        private void Tasks()
-        {
-            var tasks = new[] { GameTasks.CreateNew, GameTasks.UpdateMinion, GameTasks.FindImposter, GameTasks.Send };
-            _gameTasks = tasks[_random.Next(tasks.Length)];
-            switch (_gameTasks)
-            {
-                case GameTasks.CreateNew: CreateTask(); break;
-                case GameTasks.Send: SendTask(); break;
-                case GameTasks.FindImposter: FindImposterTask(); break;
-                case GameTasks.UpdateMinion: UpdateTask(); break;
-            }
-        }
-        /// <summary>
-        /// Выводит информацию о задании по созданию миньона
-        /// </summary>
-        private void CreateTask()
-        {
-            int needToCreate = _random.Next(1, 5);
-            GruText.Text = $"Для учета требуется добавить {needToCreate} миньонов";
-            _countMinions = _logic.GetALlMinions().Count + needToCreate;
-        }
-        /// <summary>
-        /// Выводит информацию о задании по отправлению миньона с выбранным ростом
-        /// </summary>
-        private void SendTask()
-        {
-            buttonSend.Visible = true;
-            List<string> height = _logic.GroupByHeight().Keys.ToList();
-            _keyHeight = height.ElementAt(_random.Next(height.Count));
-            GruText.Text = $"Мне тут нужен {_keyHeight} миньон\nВоспользуйся группировкой по росту и найди мне такого\nНу или для начала создай его";
-        }
-        /// <summary>
-        /// Выводит информацию о задании по нахождению предателя
-        /// </summary>
-        private void FindImposterTask()
-        {
-            if (_logic.GetALlMinions().Count != 0 )
-            {
-                var imposter = _logic.GetALlMinions()[_random.Next(_logic.GetALlMinions().Count)];
-                _imposterid = imposter.ID;
-                GruText.Text = $"Я тут узнал, что среди миньонов есть один предатель.\nЭто {imposter}\nСрочно удали его!";
-                return;
-            }
-            Tasks();
-        }
-        /// <summary>
-        /// Выводит информацию о задании по изменению миньона
-        /// </summary>
-        private void UpdateTask()
-        {
-            if (_logic.GetALlMinions().Count != 0)
-            {
-                var updateminion = _logic.GetALlMinions()[_random.Next(_logic.GetALlMinions().Count)];
-                _updateid = updateminion.ID;
-                GruText.Text = $"Слушай, {updateminion}\nявно неправильно занесен в список.Попробуй изменить его данные";
-                return;
-            }
-            Tasks();
-        }
+
         /// <summary>
         /// Отправляет миньона на задание и удаляет его из списка
         /// </summary>
@@ -373,17 +275,34 @@ namespace WinFormsApp
                 MessageBox.Show("Выберите миньона из списка");
                 return;
             }
-            if ((_keyHeight == radioButtonHigh.Text && radioButtonHigh.Checked) || (_keyHeight == radioButtonMedium.Text && radioButtonMedium.Checked) || (_keyHeight == radioButtonShort.Text && radioButtonShort.Checked))
-            {
-                _logic.RemoveMinion((int)listViewMinions.SelectedItems[0].Tag);
-                buttonSend.Visible = false;
-                Tasks();
-                RefreshMinionsList(_logic.GetALlMinions());
 
-            }
-            else
+            string selectedCategory = null;
+            if (radioButtonHigh.Checked) selectedCategory = "Высокий";
+            else if (radioButtonMedium.Checked) selectedCategory = "Средний";
+            else if (radioButtonShort.Checked) selectedCategory = "Низкий";
+            if (selectedCategory == null  || !_gameSession.CanSend(selectedCategory))
             {
                 MessageBox.Show("Не выбрана нужная группировка");
+                return;
+            }
+            try
+            {
+                int id = (int)listViewMinions.SelectedItems[0].Tag;
+                _logic.RemoveMinion(id);
+                _gameSession.CompleteSend();
+                buttonSend.Visible = false;
+                RefreshMinionsList(_logic.GetALlMinions());
+            }
+            catch (ArgumentException ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+        private void MainForm_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            if (_gameSession != null)
+            {
+                _gameSession.TaskChanged -= UpdateUITask;
             }
         }
     }

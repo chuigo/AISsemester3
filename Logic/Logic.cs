@@ -7,125 +7,69 @@ using DataAccessLayer;
 using Microsoft.EntityFrameworkCore;
 using Model;
 
-namespace Logic
-{
-    /// <summary>
-    /// Бизнес-логика для работы с миньонами
-    /// </summary>
-    public class Logic
+    namespace BuisnessLogic
     {
-        private readonly IRepository<Minion> _repository;
-        public const int MinHeight = 90;
-        public const int MiddleHeight = 110;
-        public const int HighHeight = 125;
-        public const int MaxHeight = 140;
-        private const string connectionstring = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\chuigo\source\repos\AISsemester3\DataAccessLayer\Database1.mdf;Integrated Security=True";
-        public Logic()
-        {
-            _repository = new EntityRepository<Minion>(new DBContext(connectionstring));
-            //_repository = new DapperRepository<Minion>(connectionstring);
-        }
         /// <summary>
-        /// Добавляет нового миньона
+        /// Бизнес-логика для работы с миньонами
         /// </summary>
-        /// <param name="name">имя миньона</param>
-        /// <param name="height">рость миньона</param>
-        /// <param name="hastwoeyes">есть ли 2 глаза у миньона</param>
-        /// <exception cref="ArgumentException">исключение: неправильный ввод данных</exception>
-        public void AddMinion(string name, int height, bool hastwoeyes)
+        public class Logic 
         {
-            if (string.IsNullOrWhiteSpace(name))
+            private readonly IRepository<Minion> _repository;
+            private readonly IBuisnessFunctionLogic _bflogic;
+            public Logic(IRepository<Minion> repository, IBuisnessFunctionLogic bflogic)
             {
-                throw new ArgumentException("Имя не может быть пустым");
-            }
-            if (height < MinHeight || height > MaxHeight)
-            {
-                throw new ArgumentException($"Рост должен быть в диапазоне от {MinHeight} до {MaxHeight}");
+                _repository = repository;
+                _bflogic = bflogic;
             }
 
-            var minion = new Minion(name, height, hastwoeyes);
-            _repository.Add(minion);
-        }
 
-        /// <summary>
-        /// Возвращает список миньонов
-        /// </summary>
-        /// <returns>список миньонов</returns>
-        public List<Minion> GetALlMinions() { return _repository.GetAll().ToList(); }
-
-        /// <summary>
-        /// Удаляет миньона
-        /// </summary>
-        /// <param name="id">id миньона</param>
-        /// <exception cref="ArgumentException">исключение: не найден миньон</exception>
-        public void RemoveMinion(int id) 
-        {
-            var minion = _repository.ReadByID(id);
-            if (minion == null)
-                throw new ArgumentException($"Миньон с id {id} не найден");
-            _repository.Delete(id);
-        }
-        /// <summary>
-        /// Изменяет параметры миньона
-        /// </summary>
-        /// <param name="id">id иньона</param>
-        /// <param name="name">имя миньона</param>
-        /// <param name="height">рост миньона</param>
-        /// <param name="hastwoeyes">есть ли 2 глаза у миньона</param>
-        /// <exception cref="ArgumentException">исключение: неправильный ввод данных</exception>
-        public void UpdateMinion(int id, string? name, int? height, bool? hastwoeyes)
-        {
-            var minion = _repository.ReadByID(id);
-            if (minion == null)
-                throw new ArgumentException($"Миньон с id {id} не найден");
-            if (height < MinHeight || height > MaxHeight)
+            public void AddMinion(string name, int height, bool hastwoeyes)
             {
-                throw new ArgumentException($"Рост должен быть в диапазоне от {MinHeight} до {MaxHeight}");
+                LogicValidator.NameValid(name);
+                LogicValidator.HeightValid(height);
+                var minion = new Minion(name, height, hastwoeyes);
+                _repository.Add(minion);
             }
-            if (!string.IsNullOrWhiteSpace(name)) minion.Name = name;
-            if (height.HasValue) minion.Height = height.Value;
-            if (hastwoeyes.HasValue) minion.HasTwoEyes = hastwoeyes.Value;
-            _repository.Update(minion);
-        }
 
-        /// <summary>
-        /// Получает миньона по id
-        /// </summary>
-        /// <param name="id">id миньона</param>
-        /// <returns>миьнон</returns>
-        public Minion GetMinionByID(int id)
-        {
-            var minion = _repository.ReadByID(id);
-            if (minion == null)
+
+            public List<Minion> GetALlMinions() { return _repository.GetAll().ToList(); }
+
+            public void RemoveMinion(int id) 
             {
-                throw new ArgumentException($"Миньона с таким id не существует");
+                var minion = _repository.ReadByID(id);
+                if (minion == null)
+                    throw new ArgumentException($"Миньон с id {id} не найден");
+                _repository.Delete(id);
             }
-            return minion;
 
-        }
-        /// <summary>
-        /// Группирует миньонов по росту
-        /// </summary>
-        /// <returns>словарь с категорией роста и списком</returns>
-        public Dictionary<string, List<Minion>> GroupByHeight()
-        {
-            var minions = _repository.GetAll().ToList();
-            return new Dictionary<string, List<Minion>>
+            public void UpdateMinion(int id, string? name, int? height, bool? hastwoeyes)
             {
-                ["Низкий"] = minions.Where(x => x.Height < MiddleHeight).ToList(),
-                ["Средний"] = minions.Where(x => x.Height >= MiddleHeight && x.Height < HighHeight).ToList(),
-                ["Высокий"] = minions.Where(x => x.Height >= HighHeight).ToList()
-            };
-        }
+                var minion = _repository.ReadByID(id);
+                if (minion == null)
+                    throw new ArgumentException($"Миньон с id {id} не найден");
+                if (!string.IsNullOrWhiteSpace(name)) {
+                    LogicValidator.NameValid(name);
+                    minion.Name = name; }
+                if (height.HasValue)
+                {
+                    LogicValidator.HeightValid(height.Value);
+                    minion.Height = height.Value;
+                }
+                if (hastwoeyes.HasValue) minion.HasTwoEyes = hastwoeyes.Value;
+                _repository.Update(minion);
+            }
+            public Minion? GetMinionByID(int id)
+            {
+                return _repository.ReadByID(id);
+            }
 
-        /// <summary>
-        /// Динамический поиск миньона по имени
-        /// </summary>
-        /// <param name="name">строка поиска</param>
-        /// <returns>список миньонов с именем схожим со строкой поиска</returns>
-        public List<Minion> SearchByName(string name)
-        {
-            return _repository.GetAll().Where(x => x.Name.Contains(name, StringComparison.OrdinalIgnoreCase)).ToList();
+            public Dictionary<string, List<Minion>> GroupByHeight()
+            {
+                return _bflogic.GroupByHeight();
+            }
+            public List<Minion> SearchByName(string name)
+            {
+                return _bflogic.SearchByName(name);
+            }
         }
     }
-}
