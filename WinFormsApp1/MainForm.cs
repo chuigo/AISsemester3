@@ -15,7 +15,6 @@ using BuisnessLogic;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.Button;
 using WinFormsApp1;
-using Game;
 
 namespace WinFormsApp
 {

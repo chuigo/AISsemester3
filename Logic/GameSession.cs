@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using BuisnessLogic;
 
-    namespace ConsoleApp1
+    namespace BuisnessLogic
     {
         public enum GameTasks { FindImposter, Send, UpdateMinion, CreateNew }
         public class GameSession

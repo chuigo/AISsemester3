@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using BuisnessLogic;
 using Model;
 using Ninject;
-using Game;
+
 
 namespace ConsoleApp1
 {
