@@ -14,7 +14,7 @@ namespace WinFormsApp1
         /// <summary>
         /// Возвращает изображение тела в зависимости от роста
         /// </summary>
-        public static Image BodyImage(int height)
+        public Image BodyImage(int height)
         {
             var category = HeightCategories.categories.FirstOrDefault(c => c.IsMatch(height));
             switch (category.Name)
@@ -28,7 +28,7 @@ namespace WinFormsApp1
         /// <summary>
         /// Возвращает изображение глаз
         /// </summary>
-        public static Image EyesImage(bool twoeyes)
+        public Image EyesImage(bool twoeyes)
         {
             if (twoeyes) { return Resources.TwoEyes; }
             return Resources.OneEye;

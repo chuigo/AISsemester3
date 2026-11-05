@@ -13,16 +13,24 @@ namespace ConsoleApp1
     /// </summary>
     public class MenuView
     {
+        private readonly Logic _logic;
+        private readonly GameSession _gameSession;
+        private readonly SearchView _searchView;
+
+        public MenuView(Logic logic, GameSession gameSession)
+        {
+            _logic = logic;
+            _gameSession = gameSession;
+            _searchView = new SearchView(logic);
+        }
         /// <summary>
         /// Отрисовывает главное меню
         /// </summary>
-        /// <param name="logic">экземпляр бизнес-логики</param>
-        /// <param name="gameSession">текущая игровая сессия</param>
-        public static void RenderScreen(Logic logic, GameSession gameSession)
+        public void RenderScreen()
         {
             while (true)
             {
-                Console.WriteLine($"Грю: {gameSession.GruText}");
+                Console.WriteLine($"Грю: {_gameSession.GruText}");
                 Console.WriteLine("------------------------------------------");
                 Console.WriteLine("1. Добавить миньона\n2. Удалить миньона\n" +
                     "3. Изменить миньона\n4. Вывести всех миньонов\n5. Сгруппировать по росту и отправить на задание\n" +
@@ -32,12 +40,12 @@ namespace ConsoleApp1
                 string choice = Console.ReadLine();
                 switch (choice)
                 {
-                    case "1": Console.Clear(); AddMinion(logic, gameSession); break;
-                    case "2": Console.Clear(); RemoveMinion(logic, gameSession); break;
-                    case "3": Console.Clear(); UpdateMinion(logic, gameSession); break;
-                    case "4": Console.Clear(); PrintMinions(logic); break;
-                    case "5": Console.Clear(); GroupMinionByHeight(logic, gameSession); break;
-                    case "6": Console.Clear(); SearchView.RunSearch(logic); break;
+                    case "1": Console.Clear(); AddMinion(); break;
+                    case "2": Console.Clear(); RemoveMinion(); break;
+                    case "3": Console.Clear(); UpdateMinion(); break;
+                    case "4": Console.Clear(); PrintMinions(); break;
+                    case "5": Console.Clear(); GroupMinionByHeight(); break;
+                    case "6": Console.Clear(); _searchView.RunSearch(); break;
                     case "7": return;
                     default: Console.WriteLine("Введен неверный символ, попробуйте еще раз:"); break;
                 }
@@ -50,11 +58,9 @@ namespace ConsoleApp1
         /// <summary>
         /// Запрашивает данные для добавления и добавляет миньона
         /// </summary>
-        /// <param name="logic">экземпляр бизнес-логики</param>
-        /// <param name="gameSession">текущая игровая сессия</param>
-        private static void AddMinion(Logic logic, GameSession gameSession)
+        private void AddMinion()
         {
-            if (gameSession.ImposterExist())
+            if (_gameSession.ImposterExist())
             {
                 Console.WriteLine("Сначала срочно удали предателя");
                 Console.ReadKey();
@@ -70,7 +76,7 @@ namespace ConsoleApp1
                     int height = ConsoleInput.IntCheck();
                     Console.WriteLine("Введите количество глаз миньона:");
                     bool istwoeyes = ConsoleInput.IntCheck(1, 2) == 2;
-                    logic.AddMinion(name, height, istwoeyes);
+                    _logic.AddMinion(name, height, istwoeyes);
                     Console.WriteLine("Миньон успешно добавлен!");
                     break;
                 }
@@ -80,16 +86,14 @@ namespace ConsoleApp1
                     Console.WriteLine();
                 }
             }
-            gameSession.CompleteCreate();
+            _gameSession.CompleteCreate();
         }
         /// <summary>
         /// Запрашивает данные для удаления и удаляет миньона
         /// </summary>
-        /// <param name="logic">экземпляр бизнес-логики</param>
-        /// <param name="gameSession">текущая игровая сессия</param>
-        private static void RemoveMinion(Logic logic, GameSession gameSession)
+        private void RemoveMinion()
         {
-            if (!PrintMinions(logic))
+            if (!PrintMinions())
             {
                 return;
             }
@@ -101,8 +105,8 @@ namespace ConsoleApp1
                 try
                 {
                     id = ConsoleInput.IntCheck();
-                    if (!gameSession.CanDelete(id)) { Console.WriteLine("Выбранного миньона пока нельзя удалить"); return; }
-                    logic.RemoveMinion(id);
+                    if (!_gameSession.CanDelete(id)) { Console.WriteLine("Выбранного миньона пока нельзя удалить"); return; }
+                    _logic.RemoveMinion(id);
                     break;
                 }
                 catch (ArgumentException ex)
@@ -111,20 +115,18 @@ namespace ConsoleApp1
                 }
             }
             Console.WriteLine($"Выбранный миньон удален");
-            gameSession.CompleteImposter(id);
+            _gameSession.CompleteImposter(id);
         }
         /// <summary>
         /// Запрашивает данные и обновляет миньона
         /// </summary>
-        /// <param name="logic">экземпляр бизнес-логики</param>
-        /// <param name="gameSession">текущая игровая сессия</param>
-        private static void UpdateMinion(Logic logic, GameSession gameSession)
+        private void UpdateMinion()
         {
-            if (!PrintMinions(logic))
+            if (!PrintMinions())
             {
                 return;
             }
-            if (gameSession.ImposterExist())
+            if (_gameSession.ImposterExist())
             {
                 Console.WriteLine("Сначала срочно удали предателя");
                 Console.ReadKey();
@@ -138,7 +140,7 @@ namespace ConsoleApp1
                 try
                 {
                     id = ConsoleInput.IntCheck();
-                    logic.GetMinionByID(id);
+                    _logic.GetMinionByID(id);
                     break;
                 }
                 catch (ArgumentException ex)
@@ -146,7 +148,7 @@ namespace ConsoleApp1
                     Console.WriteLine(ex.Message);
                 }
             }
-            Console.WriteLine($"Выбранный миньон: {logic.GetMinionByID(id)}");
+            Console.WriteLine($"Выбранный миньон: {_logic.GetMinionByID(id)}");
             while (true)
             {
                 try
@@ -157,7 +159,7 @@ namespace ConsoleApp1
                     int? height = ConsoleInput.IntCheckOrNull();
                     Console.WriteLine("Введите количество глаз миньона (если не хотите менять данный параментр нажмите Enter):");
                     bool? istwoeyes = ConsoleInput.BoolCheckOrNull();
-                    logic.UpdateMinion(id, name, height, istwoeyes);
+                    _logic.UpdateMinion(id, name, height, istwoeyes);
                     Console.WriteLine("Миньон успешно изменен!");
                     break;
                 }
@@ -166,39 +168,35 @@ namespace ConsoleApp1
                     Console.WriteLine($"Ошибка: {ex.Message}");
                 }
             }
-            gameSession.CompleteUpdate(id);
+            _gameSession.CompleteUpdate(id);
         }
 
         /// <summary>
         /// Группирует миньонов по росту
         /// </summary>
-        /// <param name="logic">экземпляр бизнес-логики</param>
-        /// <param name="gameSession">текущая игровая сессия</param>
-        private static void GroupMinionByHeight(Logic logic, GameSession gameSession)
+        private void GroupMinionByHeight()
         {
             Console.WriteLine("Выберите группировку миньонов по росту:\n" +
                 "1. Низкий\n2. Средний\n3. Высокий");
             int choice = ConsoleInput.IntCheck(1, 3);
-            Dictionary<string, List<Minion>> dictionaryHeight = logic.GroupByHeight();
+            Dictionary<string, List<Minion>> dictionaryHeight = _logic.GroupByHeight();
             string[] key = dictionaryHeight.Keys.ToArray();
-            logic.GroupByHeight().TryGetValue(key[choice - 1], out List<Minion> list);
+            _logic.GroupByHeight().TryGetValue(key[choice - 1], out List<Minion> list);
             if (list.Count == 0) { Console.WriteLine("Нет миньонов с таким ростом"); return; }
             foreach (var minion in list)
             {
                 Console.WriteLine(minion);
             }
-            if (gameSession.CanSend(key[choice - 1]))
+            if (_gameSession.CanSend(key[choice - 1]))
             {
-                Send(logic, list, gameSession);
+                Send(list);
             }
         }
         /// <summary>
         /// Отправляет миньона на задание
         /// </summary>
-        /// <param name="logic">экземпляр бизнес-логики</param>
         /// <param name="list">список миньонов</param>
-        /// <param name="gameSession">текущая игровая сессия</param>
-        private static void Send(Logic logic, List<Minion> list, GameSession gameSession)
+        private void Send(List<Minion> list)
         {
             Console.WriteLine("Введите ID миньона, которого хотите отправить на задание:");
             while (true)
@@ -212,8 +210,8 @@ namespace ConsoleApp1
                         continue;
 
                     }
-                    logic.RemoveMinion(id);
-                    gameSession.CompleteSend();
+                    _logic.RemoveMinion(id);
+                    _gameSession.CompleteSend();
                     break;
                 }
                 catch (ArgumentException ex)
@@ -226,16 +224,15 @@ namespace ConsoleApp1
         /// <summary>
         /// Выводит всех миньонов
         /// </summary>
-        /// <param name="logic">экземпляр бизнес-логики</param>
         /// <returns>true если миньоны есть, false иначе</returns>
-        private static bool PrintMinions(Logic logic)
+        private bool PrintMinions()
         {
-            if (logic.GetALlMinions().Count == 0)
+            if (_logic.GetALlMinions().Count == 0)
             {
                 Console.WriteLine("Список миньонов пуст!");
                 return false;
             }
-            var listMinions = logic.GetALlMinions();
+            var listMinions = _logic.GetALlMinions();
             foreach (var minion in listMinions)
             {
                 Console.WriteLine(minion);

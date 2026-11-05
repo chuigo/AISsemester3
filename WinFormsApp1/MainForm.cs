@@ -22,10 +22,13 @@ namespace WinFormsApp
     {
         private readonly Logic _logic;
         private GameSession _gameSession;
+        private readonly ImageRender _imageRender;
         private readonly Random _random = new Random();
         public MainForm(Logic logic)
         {
             _logic = logic;
+            var selector = new ImageSelector();
+            _imageRender = new ImageRender(selector);
             InitializeComponent();
             InitializeListViewMinions();
             RefreshMinionsList(_logic.GetALlMinions());
@@ -91,7 +94,7 @@ namespace WinFormsApp
                 MessageBox.Show("Сначала удалите предателя");
                 return;
             }
-            var createMinion = new CreateMinion(_logic);
+            var createMinion = new CreateMinion(_logic, _imageRender);
             createMinion.ShowDialog();
             RefreshMinionsList(_logic.GetALlMinions());
             textBoxName.Text = "";
@@ -117,7 +120,7 @@ namespace WinFormsApp
                 return;
             }
             int id = (int)listViewMinions.SelectedItems[0].Tag;
-            var updateMinion = new UpdateMinion(_logic, id);
+            var updateMinion = new UpdateMinion(_logic, id, _imageRender);
             updateMinion.ShowDialog();
             RefreshMinionsList(_logic.GetALlMinions());
             textBoxName.Text = "";
@@ -217,7 +220,7 @@ namespace WinFormsApp
             }
             var minion = _logic.GetMinionByID((int)listViewMinions.SelectedItems[0].Tag);
             var size = pictureBoxBody.Size;
-            var image = ImageRender.Render(size, minion.Height, minion.HasTwoEyes, _gameSession.ImposterID == minion.ID);
+            var image = _imageRender.Render(size, minion.Height, minion.HasTwoEyes, _gameSession.ImposterID == minion.ID);
             var old = pictureBoxBody.Image;
             pictureBoxBody.Image = image;
             old?.Dispose();

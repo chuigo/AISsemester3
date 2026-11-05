@@ -17,10 +17,12 @@ namespace WinFormsApp
     {
         private readonly Logic _logic;
         private readonly Minion _minion;
-        public UpdateMinion(Logic logic, int id)
+        private readonly ImageRender _imageRender;
+        public UpdateMinion(Logic logic, int id, ImageRender imageRender)
         {
             InitializeComponent();
             _logic = logic;
+            _imageRender = imageRender;
             _minion = _logic.GetMinionByID(id);
             numericUpDownHeight.ValueChanged += (s, e) => UpdateImage();
             radioButtonTwoEyes.CheckedChanged += (s, e) => UpdateImage();
@@ -46,7 +48,7 @@ namespace WinFormsApp
         private void UpdateImage()
         {
             var size = pictureBoxBody.Size;
-            var image = ImageRender.Render(size, (int)numericUpDownHeight.Value, !radioButtonOneEye.Checked);
+            var image = _imageRender.Render(size, (int)numericUpDownHeight.Value, !radioButtonOneEye.Checked);
             var old = pictureBoxBody.Image;
             pictureBoxBody.Image = image;
             old?.Dispose();

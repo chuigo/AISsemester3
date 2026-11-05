@@ -15,15 +15,14 @@ namespace ConsoleApp1
 {
     public class Program
     {
-        private static Logic _logic;
-        private static GameSession _gameSession;
         static void Main(string[] args)
         {
             IKernel ninjectKernel = new StandardKernel(new DapperConfigModule());
-            _logic = ninjectKernel.Get<Logic>();
-            _gameSession = new GameSession(_logic);
+            Logic logic = ninjectKernel.Get<Logic>();
+            GameSession gameSession = new GameSession(logic);
             ShowPrehistory();
-            MenuView.RenderScreen(_logic, _gameSession);   
+            MenuView menuView = new MenuView(logic, gameSession);
+            menuView.RenderScreen();
         }
         private static void ShowPrehistory()
         {

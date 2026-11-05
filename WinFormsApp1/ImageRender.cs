@@ -11,6 +11,11 @@ namespace WinFormsApp1
     /// </summary>
     public class ImageRender
     {
+        private readonly ImageSelector _selector;
+        public ImageRender(ImageSelector selector)
+        {
+            _selector = selector;
+        }
         /// <summary>
         /// Создает итоговое изображение миньона заданного размера
         /// </summary>
@@ -19,7 +24,7 @@ namespace WinFormsApp1
         /// <param name="twoeyes">признак наличия 2ух глаз</param>
         /// <param name="isimposter">является ли миньон предателем</param>
         /// <returns></returns>
-        public static Image Render(Size size, int height, bool twoeyes, bool isimposter = false)
+        public Image Render(Size size, int height, bool twoeyes, bool isimposter = false)
         {
             var bmp = new Bitmap(size.Width, size.Height);
             using var g = Graphics.FromImage(bmp);
@@ -29,8 +34,8 @@ namespace WinFormsApp1
             }
             else
             {
-                g.DrawImage(ImageSelector.BodyImage(height), 0, 0, bmp.Width, bmp.Height);
-                g.DrawImage(ImageSelector.EyesImage(twoeyes), 0, 0, bmp.Width, bmp.Height);
+                g.DrawImage(_selector.BodyImage(height), 0, 0, bmp.Width, bmp.Height);
+                g.DrawImage(_selector.EyesImage(twoeyes), 0, 0, bmp.Width, bmp.Height);
             }
             return bmp;
         }

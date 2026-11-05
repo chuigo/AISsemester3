@@ -7,16 +7,22 @@ namespace ConsoleApp1
 {
     public class SearchView
     {
+        private readonly Logic _logic;
+
+        public SearchView(Logic logic)
+        {
+            _logic = logic;
+        }
         /// <summary>
         /// Метод, считывающий клавиши для поиска
         /// </summary>
         /// <param name="logic"></param>
-        public static void RunSearch(Logic logic)
+        public void RunSearch()
         {
             string name = "";
             while (true)
             {
-                RenderSearchByName(name,logic);
+                RenderSearchByName(name);
                 var key = Console.ReadKey(intercept: true);
                 if (key.Key == ConsoleKey.Escape)
                 {
@@ -39,15 +45,14 @@ namespace ConsoleApp1
         /// <summary>
         /// Метод, отрисовывающий экран поиска
         /// </summary>
-        /// <param name="name"></param>
-        /// <param name="logic"></param>
-        public static void RenderSearchByName(string name, Logic logic)
+        /// <param name="name">введенная строка</param>
+        public void RenderSearchByName(string name)
         {
             Console.Clear();
             Console.WriteLine("Введите имя миньона:");
             Console.WriteLine(name);
             Console.WriteLine();
-            var resultList = logic.SearchByName(name);
+            var resultList = _logic.SearchByName(name);
             if (resultList == null)
             {
                 Console.WriteLine("Ничего не найдено");

@@ -17,10 +17,12 @@ namespace WinFormsApp
     public partial class CreateMinion : Form
     {
         private readonly Logic _logic;
-        public CreateMinion(Logic logic)
+        private readonly ImageRender _imageRender;
+        public CreateMinion(Logic logic, ImageRender imageRender)
         {
             InitializeComponent();
             _logic = logic;
+            _imageRender = imageRender;
             numericUpDownHeight.ValueChanged += (s, e) => UpdateImage();
             radionButtonTwoEyes.CheckedChanged += (s, e) => UpdateImage();
             radioButtonOneEyes.CheckedChanged += (s, e) => UpdateImage();
@@ -28,7 +30,7 @@ namespace WinFormsApp
             numericUpDownHeight.Maximum = HeightCategories.MaxHeight;
             numericUpDownHeight.Minimum = HeightCategories.MinHeight;
             this.Shown += (s, e) => UpdateImage();
-
+            _imageRender = imageRender;
         }
 
         /// <summary>
@@ -37,7 +39,7 @@ namespace WinFormsApp
         private void UpdateImage()
         {
             var size = pictureBoxBody.Size;
-            var image = ImageRender.Render(size, (int)numericUpDownHeight.Value, !radioButtonOneEyes.Checked);
+            var image = _imageRender.Render(size, (int)numericUpDownHeight.Value, !radioButtonOneEyes.Checked);
             var old = pictureBoxBody.Image;
             pictureBoxBody.Image = image;
             old?.Dispose();
