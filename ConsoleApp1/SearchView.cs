@@ -7,9 +7,9 @@ namespace ConsoleApp1
 {
     public class SearchView
     {
-        private readonly Logic _logic;
+        private readonly ILogic _logic;
 
-        public SearchView(Logic logic)
+        public SearchView(ILogic logic)
         {
             _logic = logic;
         }

@@ -7,7 +7,7 @@ using System.Text;
         public enum GameTasks { FindImposter, Send, UpdateMinion, CreateNew }
         public class GameSession
         {
-            private readonly Logic _logic;
+            private readonly ILogic _logic;
             private readonly Random _random = new Random();
             public GameTasks CurrentTask { get; private set; }
             public int? CountMinions { get; private set; } 
@@ -16,7 +16,7 @@ using System.Text;
             public int? UpdateID { get; private set; }
             public string? GruText {get; private set;}
             public event Action? TaskChanged;
-            public GameSession(Logic logic)
+            public GameSession(ILogic logic)
             {
                 _logic = logic;
                 CurrentTask = GameTasks.CreateNew;

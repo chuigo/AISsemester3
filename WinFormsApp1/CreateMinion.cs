@@ -16,9 +16,9 @@ namespace WinFormsApp
 {
     public partial class CreateMinion : Form
     {
-        private readonly Logic _logic;
+        private readonly ILogic _logic;
         private readonly ImageRender _imageRender;
-        public CreateMinion(Logic logic, ImageRender imageRender)
+        public CreateMinion(ILogic logic, ImageRender imageRender)
         {
             InitializeComponent();
             _logic = logic;

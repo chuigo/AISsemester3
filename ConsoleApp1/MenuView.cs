@@ -13,11 +13,11 @@ namespace ConsoleApp1
     /// </summary>
     public class MenuView
     {
-        private readonly Logic _logic;
+        private readonly ILogic _logic;
         private readonly GameSession _gameSession;
         private readonly SearchView _searchView;
 
-        public MenuView(Logic logic, GameSession gameSession)
+        public MenuView(ILogic logic, GameSession gameSession)
         {
             _logic = logic;
             _gameSession = gameSession;

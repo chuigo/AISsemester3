@@ -15,10 +15,10 @@ namespace WinFormsApp
 {
     public partial class UpdateMinion : Form
     {
-        private readonly Logic _logic;
+        private readonly ILogic _logic;
         private readonly Minion _minion;
         private readonly ImageRender _imageRender;
-        public UpdateMinion(Logic logic, int id, ImageRender imageRender)
+        public UpdateMinion(ILogic logic, int id, ImageRender imageRender)
         {
             InitializeComponent();
             _logic = logic;

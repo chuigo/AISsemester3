@@ -18,7 +18,7 @@ namespace ConsoleApp1
         static void Main(string[] args)
         {
             IKernel ninjectKernel = new StandardKernel(new DapperConfigModule());
-            Logic logic = ninjectKernel.Get<Logic>();
+            ILogic logic = ninjectKernel.Get<Logic>();
             GameSession gameSession = new GameSession(logic);
             ShowPrehistory();
             MenuView menuView = new MenuView(logic, gameSession);

@@ -12,7 +12,7 @@ using Model;
         /// <summary>
         /// Бизнес-логика для работы с миньонами
         /// </summary>
-        public class Logic 
+        public class Logic : ILogic 
         {
             private readonly IRepository<Minion> _repository;
             private readonly IBuisnessFunctionLogic _bflogic;

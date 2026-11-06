@@ -20,11 +20,11 @@ namespace WinFormsApp
 {
     public partial class MainForm : Form
     {
-        private readonly Logic _logic;
+        private readonly ILogic _logic;
         private GameSession _gameSession;
         private readonly ImageRender _imageRender;
         private readonly Random _random = new Random();
-        public MainForm(Logic logic)
+        public MainForm(ILogic logic)
         {
             _logic = logic;
             var selector = new ImageSelector();

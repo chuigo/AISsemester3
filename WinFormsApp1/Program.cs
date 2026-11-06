@@ -12,7 +12,7 @@ namespace WinFormsApp
 {
     internal static class Program
     {
-        private static Logic _logic;
+        private static ILogic _logic;
         /// <summary>
         /// Главная точка входа для приложения.
         /// </summary>
